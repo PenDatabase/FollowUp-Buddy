@@ -1,0 +1,63 @@
+# Python bytecode
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Django migrations
+*/migrations/*
+
+# Database
+*.sqlite3
+db.sqlite3
+
+# Media and static files
+/media/
+/static/
+
+# Environment files
+.env
+*.env
+
+# Virtual environment
+venv/
+.env/
+
+# Python virtual environment (Pipenv, virtualenv, etc.)
+Pipfile.lock
+*.pyc
+
+# VS Code settings
+.vscode/
+
+# Mac OS files
+.DS_Store
+
+# IDEs
+.idea/
+
+# Log files
+*.log
+
+# Coverage reports
+.coverage
+coverage.xml
+*.cover
+
+# Build directories
+build/
+dist/
+
+# Pytest
+.pytest_cache/
+
+# Django's test database
+test_db/
+
+# PyCharm
+*.iml
+.idea/
+
+# Other IDEs (e.g., JetBrains, Sublime Text, etc.)
+*.sublime-project
+*.sublime-workspace
