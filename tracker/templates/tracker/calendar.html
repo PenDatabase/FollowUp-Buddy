@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Follow Up Buddy - Calendar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-gray-100 via-teal-50 to-orange-50 text-gray-800 font-sans">
+    <div class="min-h-screen flex flex-col">
+        <!-- Header -->
+        <header class="bg-gradient-to-r from-teal-500 to-orange-500 text-white py-4 shadow-md">
+            <div class="container mx-auto flex justify-between items-center">
+                <h1 class="text-3xl font-bold">Follow Up Buddy</h1>
+                <nav>
+                    <a href="/" class="mx-3 hover:underline">Home</a>
+                    <a href="/calendar/" class="mx-3 hover:underline">Calendar</a>
+                    <a href="/add_followup" class="mx-3 hover:underline">Add Follow-Up</a>
+                </nav>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="flex-grow container mx-auto py-8">
+            <!-- Navigation Buttons -->
+            <div class="flex justify-between mb-6">
+                <!-- Previous Month -->
+                <a href="{% url 'calendar' prev_year prev_month %}" 
+                   class="px-4 py-2 bg-teal-500 text-white rounded hover:bg-teal-600">
+                    Previous
+                </a>
+
+                <h2 class="text-2xl font-bold text-teal-600">{{ month }} {{ year }} Calendar</h2>
+
+                <!-- Next Month -->
+                <a href="{% url 'calendar' next_year next_month %}" 
+                   class="px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600">
+                    Next
+                </a>
+            </div>
+
+            <!-- Calendar -->
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <!-- Days of the Week -->
+                <div class="grid grid-cols-7 text-center text-gray-600 font-bold mb-4">
+                    <span>Sun</span>
+                    <span>Mon</span>
+                    <span>Tue</span>
+                    <span>Wed</span>
+                    <span>Thu</span>
+                    <span>Fri</span>
+                    <span>Sat</span>
+                </div>
+                <!-- Calendar Grid -->
+                <div class="grid grid-cols-7 gap-2">
+                    <!-- Placeholder for first day alignment -->
+                    {% for _ in placeholders %}
+                    <div></div>
+                    {% endfor %}
+
+                    <!-- Calendar Days -->
+                    {% for day in calendar_days %}
+                    <div class="p-2 rounded-lg text-center border 
+                        {% if day.has_followup %}bg-teal-100 hover:bg-teal-200{% else %}hover:bg-gray-100{% endif %} cursor-pointer">
+                        {% comment %}
+                        {% url 'followup_details' day.date %}
+                        {% endcomment %}
+                        <a href="#" class="{% if day.has_followup %}text-teal-700 font-bold{% else %}text-gray-700{% endif %}">
+                            {{ day.day }}
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-gradient-to-r from-gray-200 to-gray-300 py-4 text-center text-gray-700">
+            <p>&copy; 2025 Follow Up Buddy. Designed to keep you on track!</p>
+        </footer>
+    </div>
+</body>
+</html>
