@@ -1,36 +1,47 @@
+from django.db import transaction
 from .models import Evangelism, FollowUp
 from datetime import date, timedelta
 
-def create_evangelism(user, person_name, description, faith, course=None, evangelism_date=None):
+def create_evangelism(user, person_name, description, faith, course=None, evangelism_date=None, location=None):
     """
     Creates an evangelism record and schedules follow-ups.
     """
     # Create and save the Evangelism instance
-    evangelism = Evangelism(
-        evangelist=user,
-        person_name=person_name,
-        description=description,
-        faith=faith,
-        course=course,
-        date=evangelism_date if evangelism_date else date.today()
-    )
-    evangelism.save()
+    with transaction.atomic():
+        evangelism = Evangelism(
+            evangelist=user,
+            person_name=person_name,
+            description=description,
+            faith=faith,
+            location=location,
+            course=course,
+            date=evangelism_date if evangelism_date else date.today()
+        )
+        evangelism.save()
 
-    # Create follow-up instances
-    followups = []
-    interval_days = Evangelism.objects.all().count() # relies on the total no. of evangelsim
+        # Create follow-up instances
+        followups = []
+        interval_days = Evangelism.objects.all().count() # relies on the total no. of evangelism
+        first_date = Evangelism.objects.order_by("date").first().date
+        interval_date = timedelta(interval_days)
 
-    for i in range(7):  # Create 7 follow-ups
-        if i < 3:
-            followups.append(FollowUp(evangelism=evangelism, date=interval_days))
-            interval_days += timedelta(days=interval_days)
-        else:
-            interval_days += 2
-            followup_date += timedelta(days=interval_days)  # Subsequent follow-ups increased every timeframe of former followup plus to days
-            followups.append(FollowUp(evangelism=evangelism, date=followup_date))
+        for i in range(7):  # Create 7 follow-ups
+            if i < 3:
+                new_followup = FollowUp(evangelism=evangelism, date=first_date + interval_date)
+                followups.append(new_followup)
+                interval_date += timedelta(interval_days)
+                print(f"Followup{i} date:", new_followup.date, "\n")
+            else:
+                interval_date += timedelta(2) + timedelta(interval_days)
+                new_followup = FollowUp(evangelism=evangelism, date=first_date + interval_date)
+                followups.append(new_followup)
+                print(f"Followup{i} date:", new_followup.date, "\n")
 
-    # Bulk create follow-ups
-    FollowUp.objects.bulk_create(followups)
+        # Bulk create follow-ups
+        FollowUp.objects.bulk_create(followups)
+    return True
+
+
 
 
 def schedule_activity():
@@ -41,7 +52,7 @@ def schedule_activity():
     if Evangelism.objects.exists():
         for evangelism in Evangelism.objects.all():
             # Get today's follow-ups for this evangelism
-            followups = FollowUp.objects.filter(evangelism=evangelism, date=date.today)
+            followups = FollowUp.objects.filter(evangelism=evangelism, date=date.today())
             followup_count = followups.count()
 
             # Handle the count of follow-ups

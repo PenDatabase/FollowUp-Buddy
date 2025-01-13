@@ -1,8 +1,11 @@
 from django.shortcuts import render
-from datetime import datetime, timedelta
+from django.contrib.auth.decorators import login_required
+from datetime import datetime
 from calendar import monthrange
 from .utils import schedule_activity, create_evangelism
 from .models import Evangelism, FollowUp
+from .forms import EvangelismForm, FollowUpForm
+
 
 
 
@@ -80,6 +83,45 @@ def calendar_view(request, year=None, month=None):
 
 
 
+
+
+@login_required
+def add_evangelism(request):
+    if request.method == "POST":
+        person_name = request.POST.get("person_name").strip()
+        description = request.POST.get("description").strip()
+        faith = request.POST["faith"]
+        evangelist = request.user
+        date = request.POST["date"]
+        location = request.POST.get("location").strip()
+        course = request.POST.get("course").strip()
+
+        evangelism = create_evangelism(
+        user=evangelist,
+        person_name=person_name,
+        description=description,
+        faith=faith,
+        location=location,
+        course=course,
+        evangelism_date=date
+        )
+    
+    form = EvangelismForm()
+    context = {
+        "form":form
+    }
+    return render(request, "tracker/add_evangelism.html", context)
+
+
+
+        
+        
+
+
+
+
 # Adding record views
 def add_followup(request):
     pass
+
+

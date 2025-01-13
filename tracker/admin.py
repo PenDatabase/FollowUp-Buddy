@@ -1,3 +1,7 @@
 from django.contrib import admin
+from .models import Evangelism, FollowUp
 
-# Register your models here.
+
+
+admin.site.register(Evangelism)
+admin.site.register(FollowUp)

@@ -1,15 +1,13 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from calendar import monthrange
+import os, django
 
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "followup_buddy.settings")
+django.setup()
 
-year = 2025
-month = 1
+from tracker.models import Evangelism, FollowUp
+from tracker.utils import create_evangelism
 
- # First day of the week (0 = Monday, 6 = Sunday)
-first_day_of_week = datetime(year, month, 2).weekday()
-
-# Placeholder for empty slots in the calendar
-placeholders = list(range(first_day_of_week))
-
-print(first_day_of_week)
-print(placeholders)
+create_evangelism(
+    user
+)
