@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Evangelism - Follow Up Buddy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Include flatpickr CSS and JS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+    <!-- Custom CSS for footer positioning -->
+    <style>
+        html, body {
+            height: 100%; /* Make sure the body and html elements take full height */
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .content {
+            flex: 1; /* This makes the content area flexible and pushes the footer down */
+        }
+
+        footer {
+            background: linear-gradient(to right, #e2e8f0, #f7fafc);
+            padding: 16px;
+            text-align: center;
+            color: #4a5568;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-gray-100 via-teal-50 to-orange-50 text-gray-800 font-sans">
+    <div class="content">
+        <!-- Header -->
+        <header class="bg-gradient-to-r from-teal-500 to-orange-500 text-white py-4 shadow-md">
+            <div class="container mx-auto flex justify-between items-center">
+                <h1 class="text-3xl font-bold">Follow Up Buddy</h1>
+                <nav>
+                    <a href="{% url 'home' %}" class="mx-3 hover:underline">Home</a>
+                    <a href="{% url 'evang_select' %}" class="mx-3 hover:underline">Add Follow-Up</a>
+                    <a href="{% url 'add_evangelism' %}" class="mx-3 hover:underline">Add Evangelism</a>
+                    
+                    {% if not user.is_authenticated %}
+                        <a href="#" class="mx-3 hover:underline">Login</a>
+                        <a href="#" class="mx-3 hover:underline">Sign Up</a>
+                    {% else %}
+                        <a href="#" class="mx-3 hover:underline">Log Out</a>
+                    {% endif %}
+                        
+                </nav>
+            </div>
+        </header>
+
+        {% block body %}
+        {% endblock body %}
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 Follow Up Buddy. Made with care to support meaningful connections.</p>
+    </footer>
+
+    <!-- Initialize flatpickr -->
+    <script>
+        flatpickr("#date", {
+            dateFormat: "Y-m-d", // Set the date format
+            altInput: true, // Use an alternative input field for better UX
+            altFormat: "F j, Y", // Display date in a human-readable format
+            theme: "material_blue" // Optional: You can change the calendar theme
+        });
+    </script>
+</body>
+</html>

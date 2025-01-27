@@ -1,31 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Follow Up Buddy - Home</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gradient-to-br from-gray-100 via-teal-50 to-orange-50 text-gray-800 font-sans">
-    <div class="min-h-screen flex flex-col">
-        <!-- Header -->
-        <header class="bg-gradient-to-r from-teal-500 to-orange-500 text-white py-4 shadow-md">
-            <div class="container mx-auto flex justify-between items-center">
-                <h1 class="text-3xl font-bold">Follow Up Buddy</h1>
-                <nav>
-                    <a href="#" class="mx-3 hover:underline">Home</a>
-                    <a href="#" class="mx-3 hover:underline">Calendar</a>
-                    <a href="" class="mx-3 hover:underline">Add Follow-Up</a>
-                    <a href="" class="mx-3 hover:underline">Add Evangelism</a>
-                </nav>
-            </div>
-        </header>
+{% extends 'tracker/base.html' %}
 
+{% block body %}
+    
         <!-- Main Content -->
         <main class="flex-grow container mx-auto py-8">
             <!-- Scheduled Activity -->
             
-            {% if followup_schedule %}
+            {% if followup %}
                 <div class="bg-white p-6 rounded-lg shadow-lg">
                     <h2 class="text-xl font-bold text-black-600">Today's Activity</h2>
                     <p class="mt-2 text-gray-600">Here's your scheduled activity for today:</p>
@@ -51,9 +32,11 @@
                 <!-- Total Follow-Ups -->
                 <div class="bg-gradient-to-b from-teal-50 to-orange-50 p-6 rounded-lg shadow-md">
                     <h3 class="text-lg font-bold text-black-600">Activity Sum up</h3>
-                    <p class="mt-2 text-gray-600">Track your achievements so far:</p>
-                    <div class="mt-4 text-orange-700 font-bold text-3xl">{{ total_followup }} <small>Follow ups</small></div>
-                    <div class="mt-4 text-orange-700 font-bold text-3xl">{{ total_evangelism }} <small>Evangelisms</small></div>
+                    <p class="mt-2 text-gray-600">Track your activities so far:</p>
+                    
+                
+                    <div class="mt-4 text-orange-700 font-bold text-3xl">{{ total_followup }} <small>{% if total_followup != 1 %}Follow ups {% else %}Follow up {% endif %}</small></div>
+                    <div class="mt-4 text-orange-700 font-bold text-3xl">{{ total_evangelism }} <small>{% if total_evangelism != 1 %}Evangelisms {% else %}Evangelism {% endif %}</small></div>
                 </div>
 
                 <!-- Quick View -->
@@ -68,10 +51,4 @@
             </div>
         </main>
 
-        <!-- Footer -->
-        <footer class="bg-gradient-to-r from-gray-200 to-gray-300 py-4 text-center text-gray-700">
-            <p>&copy; 2025 Follow Up Buddy. Made with care to support meaningful connections.</p>
-        </footer>
-    </div>
-</body>
-</html>
+{% endblock body %}

@@ -10,6 +10,7 @@ class FollowUpForm(forms.ModelForm):
 
 
 class EvangelismForm(forms.ModelForm):
+    date = forms.DateField()
     class Meta:
         model = Evangelism
         fields = ["person_name", 
@@ -17,5 +18,4 @@ class EvangelismForm(forms.ModelForm):
                   "location", 
                   "date", 
                   "description", 
-                  "date", 
                   "faith"]

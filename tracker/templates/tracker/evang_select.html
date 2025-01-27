@@ -1,0 +1,24 @@
+{% extends 'tracker/base.html' %}
+{% load widget_tweaks %}
+
+{% block body %}
+<div class="container mx-auto py-8">
+    <h2 class="text-2xl font-semibold text-gray-800">Select Evangelism for Follow-Up</h2>
+    
+    <form method="POST" class="mt-6" action="{% url 'evang_select' %}">
+        {% csrf_token %}
+        
+        <div class="space-y-4">
+            {% for evangelism in evangelisms %}
+                <div class="flex items-center space-x-4">
+                    <input type="radio" id="evangelism_{{ evangelism.id }}" name="evangelism" value="{{ evangelism.id }}" class="h-6 w-6 text-teal-500 border-gray-300 focus:ring-teal-500">
+                    <label for="evangelism_{{ evangelism.id }}" class="text-lg">{{ evangelism }}</label>
+            {% endfor %}
+        </div>
+
+        <div class="mt-6 flex justify-end">
+            <button type="submit" class="bg-teal-500 text-white py-2 px-6 rounded-md shadow-lg hover:bg-teal-600 focus:outline-none">Submit</button>
+        </div>
+    </form>
+</div>
+{% endblock body %}

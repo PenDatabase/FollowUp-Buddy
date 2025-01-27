@@ -18,6 +18,7 @@ class Evangelism(models.Model):
     description = models.TextField()
     faith = models.CharField(max_length=20, choices=FAITH_STATUS)
     relevance = models.IntegerField(default=2)
+    completed = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         if self.faith == "strong_faith":
@@ -29,6 +30,9 @@ class Evangelism(models.Model):
         else:
             self.relevance = 4
         return super().save(*args, **kwargs)
+    
+    def __str__(self):
+        return f"{self.evangelist} -> {self.person_name}"
 
 
 

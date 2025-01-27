@@ -1,8 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
 from calendar import monthrange
-from .utils import schedule_activity, create_evangelism
+from .utils import recommend_activity
 from .models import Evangelism, FollowUp
 from .forms import EvangelismForm, FollowUpForm
 
@@ -12,9 +12,8 @@ from .forms import EvangelismForm, FollowUpForm
 def dashboard(request):
     context = {}
 
-    activity = schedule_activity()
-    if activity != "evangelism":
-        context["followup_scheule"] = True
+    activity = recommend_activity()
+    if activity:
         context["followup"] = activity
     
 
@@ -22,9 +21,6 @@ def dashboard(request):
     context["total_followup"] = FollowUp.objects.filter(completed=True).count()
 
     return render(request, "tracker/home.html", context)
-
-
-
 
 
 
@@ -79,32 +75,17 @@ def calendar_view(request, year=None, month=None):
 
 
 
-
-
-
-
-
-
 @login_required
 def add_evangelism(request):
     if request.method == "POST":
-        person_name = request.POST.get("person_name").strip()
-        description = request.POST.get("description").strip()
-        faith = request.POST["faith"]
-        evangelist = request.user
-        date = request.POST["date"]
-        location = request.POST.get("location").strip()
-        course = request.POST.get("course").strip()
+        form = EvangelismForm(request.POST)
 
-        evangelism = create_evangelism(
-        user=evangelist,
-        person_name=person_name,
-        description=description,
-        faith=faith,
-        location=location,
-        course=course,
-        evangelism_date=date
-        )
+        if form.is_valid():
+            form.save()
+
+        else:
+            return render(request, "tracker/add_evangelism.html", context)
+        
     
     form = EvangelismForm()
     context = {
@@ -114,14 +95,37 @@ def add_evangelism(request):
 
 
 
-        
-        
-
-
+# @login_required
+# def 
 
 
 # Adding record views
-def add_followup(request):
-    pass
+@login_required
+def evang_select(request):
+    if request.method == "POST":
+        evang_id = request.POST.get("evangelism")
+
+        redirect("add_followup", evang_id)
+
+    evangelist = request.user
+    evangelisms = Evangelism.objects.filter(evangelist=evangelist)
+
+    context = {
+        "evangelisms": evangelisms
+    }
+        
+    return render(request, "tracker/evang_select.html", context)
 
 
+
+@login_required
+def add_followup_from_evang(request, pk):
+    if request.method == "POST":
+        followup = FollowUpForm(request.POST)
+
+        if followup.is_valid():
+            followup.save()
+            redirect("home")
+
+    form = FollowUpForm()
+    return render(request, "tracker/add_followup.html")
