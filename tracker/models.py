@@ -7,8 +7,8 @@ class Evangelism(models.Model):
     FAITH_STATUS = {
         "strong_faith": "Strong Faith",
         "less_faith": "Less Faith",
-        "unbeliever": "unbeliever",
-        "unknown": "unknown",
+        "unbeliever": "Unbeliever",
+        "unknown": "Unknown",
     }
     evangelist = models.ForeignKey(User, on_delete=models.CASCADE)
     person_name = models.CharField(max_length=200)

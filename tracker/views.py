@@ -81,7 +81,9 @@ def add_evangelism(request):
         form = EvangelismForm(request.POST)
 
         if form.is_valid():
-            form.save()
+            evangelism = form.save(commit=False)
+            evangelism.evangelist = request.user #Make evangelist current logged in user
+            evangelism.save()
 
         else:
             return render(request, "tracker/add_evangelism.html", context)
