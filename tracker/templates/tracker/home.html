@@ -11,8 +11,9 @@
                     <h2 class="text-xl font-bold text-black-600">Today's Activity</h2>
                     <p class="mt-2 text-gray-600">Here's your scheduled activity for today:</p>
                     <div class="mt-4 bg-gradient-to-r from-orange-100 to-teal-100 p-5 rounded-lg shadow">
-                        <h3 class="font-bold text-orange-700">Follow up with {{ followup.evangelism.person_name }}</h3>
-                        <p class="text-gray-700 mt-2">Details: {{ followup.evangelism.location }}, {{ followup.evangelism.faith }}</p>
+                        <h3 class="font-bold text-gray-700">Follow up: <span class="text-orange-700">{{ followup.person_name }}</span></h3>
+                        <p class="font-bold text-gray-700 mt-2">Details: <span class="text-orange-700">{{ followup.location }}</span></p>
+                        <p class="font-bold text-gray-700 mt-2">Status: <span class="text-orange-700">{{ followup.faith }}</span></p>
                     </div>
                 </div>
             {% else %}

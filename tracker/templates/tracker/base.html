@@ -41,7 +41,7 @@
                 <h1 class="text-3xl font-bold">Follow Up Buddy</h1>
                 <nav>
                     <a href="{% url 'home' %}" class="mx-3 hover:underline">Home</a>
-                    <a href="{% url 'evang_select' %}" class="mx-3 hover:underline">Add Follow-Up</a>
+                    <a href="{% url 'add_followup' %}" class="mx-3 hover:underline">Add Follow-Up</a>
                     <a href="{% url 'add_evangelism' %}" class="mx-3 hover:underline">Add Evangelism</a>
                     
                     {% if not user.is_authenticated %}

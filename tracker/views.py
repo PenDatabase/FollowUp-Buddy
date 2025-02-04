@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
 from calendar import monthrange
@@ -13,7 +14,7 @@ def dashboard(request):
     context = {}
 
     activity = recommend_activity()
-    if activity:
+    if activity is not None:
         context["followup"] = activity
     
 
@@ -97,37 +98,21 @@ def add_evangelism(request):
 
 
 
-# @login_required
-# def 
 
-
-# Adding record views
-@login_required
-def evang_select(request):
-    if request.method == "POST":
-        evang_id = request.POST.get("evangelism")
-
-        redirect("add_followup", evang_id)
-
-    evangelist = request.user
-    evangelisms = Evangelism.objects.filter(evangelist=evangelist)
-
-    context = {
-        "evangelisms": evangelisms
-    }
-        
-    return render(request, "tracker/evang_select.html", context)
 
 
 
 @login_required
-def add_followup_from_evang(request, pk):
+def add_followup(request):
     if request.method == "POST":
-        followup = FollowUpForm(request.POST)
+        followup = FollowUpForm(request.POST, evangelist=request.user)
 
         if followup.is_valid():
             followup.save()
-            redirect("home")
+            return redirect("home")
 
-    form = FollowUpForm()
-    return render(request, "tracker/add_followup.html")
+    form = FollowUpForm(evangelist=request.user)
+    context = {
+        "form": form,
+    }
+    return render(request, "tracker/add_followup.html", context)

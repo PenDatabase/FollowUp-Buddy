@@ -7,6 +7,11 @@ class FollowUpForm(forms.ModelForm):
         model = FollowUp
         fields = "__all__"
 
+    def __init__(self, *args, **kwargs):
+        evangelist = kwargs.pop('evangelist', None)
+        super().__init__(*args, **kwargs)
+        self.fields['evangelism'].queryset = Evangelism.objects.filter(evangelist=evangelist)
+
 
 
 class EvangelismForm(forms.ModelForm):

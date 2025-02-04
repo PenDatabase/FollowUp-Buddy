@@ -2,16 +2,16 @@ from django.utils import timezone
 from .models import Evangelism
 
 def recommend_activity():
-    evangelisms = Evangelism.objects.filter(completed=False).select_related("followup").order_by("date")
+    evangelisms = Evangelism.objects.filter(completed=False).order_by("date")#.select_related("followup_set")
 
     if evangelisms.count() >= 7:
         for evangelism in evangelisms:
-            if evangelism.followup:
-                last_followup = evangelism.followup_set.order_by("date").last()
-                if ((timezone.now().date() - last_followup.date) >= 7):
-                    return evangelism
+            if evangelism.followup_set.exists():
+                last_followup = evangelism.followup_set.order_by("-date").first()
+                if (timezone.now().date() - last_followup.date).days >= 7:
+                    return last_followup
             else:
-                if ((timezone.now().date() - evangelism.date) >= 7):
+                if (timezone.now().date() - evangelism.date).days >= 7:
                     return evangelism
     
     return None
