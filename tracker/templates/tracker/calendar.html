@@ -1,4 +1,5 @@
 {% extends 'tracker/base.html' %}
+{% block header %}{% endblock %}
 
 {% block body %}
     
@@ -8,7 +9,7 @@
             <!-- Navigation Buttons -->
             <div class="flex justify-between mb-6">
                 <!-- Previous Month -->
-                <a href="{% url 'calendar' prev_year prev_month %}" 
+                <a href="{% url 'activity_calendar' prev_year prev_month %}" 
                    class="px-4 py-2 bg-teal-500 text-white rounded hover:bg-teal-600">
                     Previous
                 </a>
@@ -16,7 +17,7 @@
                 <h2 class="text-2xl font-bold text-teal-600">{{ month }} {{ year }} Calendar</h2>
 
                 <!-- Next Month -->
-                <a href="{% url 'calendar' next_year next_month %}" 
+                <a href="{% url 'activity_calendar' next_year next_month %}" 
                    class="px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600">
                     Next
                 </a>
@@ -44,11 +45,11 @@
                     <!-- Calendar Days -->
                     {% for day in calendar_days %}
                     <div class="p-2 rounded-lg text-center border 
-                        {% if day.has_followup %}bg-teal-100 hover:bg-teal-200{% else %}hover:bg-gray-100{% endif %} cursor-pointer">
+                        {% if day.has_evangelism %}bg-teal-100 hover:bg-teal-200{% else %}hover:bg-gray-100{% endif %} cursor-pointer">
                         {% comment %}
                         {% url 'followup_details' day.date %}
                         {% endcomment %}
-                        <a href="#" class="{% if day.has_followup %}text-teal-700 font-bold{% else %}text-gray-700{% endif %}">
+                        <a href="#" class="{% if day.has_evangelism %}text-teal-700 font-bold{% else %}text-gray-700{% endif %}">
                             {{ day.day }}
                         </a>
                     </div>

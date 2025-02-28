@@ -5,7 +5,7 @@ from .models import FollowUp, Evangelism
 class FollowUpForm(forms.ModelForm):
     class Meta:
         model = FollowUp
-        fields = "__all__"
+        fields = ["evangelism", "date"]
 
     def __init__(self, *args, **kwargs):
         evangelist = kwargs.pop('evangelist', None)

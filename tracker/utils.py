@@ -1,8 +1,11 @@
 from django.utils import timezone
 from .models import Evangelism
 
-def recommend_activity():
-    evangelisms = Evangelism.objects.filter(completed=False).order_by("date")#.select_related("followup_set")
+def recommend_activity(evangelist = None):
+    evangelisms = Evangelism.objects.filter(
+                                            evangelist=evangelist, 
+                                            completed=False
+                                            ).order_by("date")#.select_related("followup_set")
 
     if evangelisms.count() >= 7:
         for evangelism in evangelisms:

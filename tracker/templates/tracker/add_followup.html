@@ -1,5 +1,6 @@
 {% extends 'tracker/base.html' %}
 {% load widget_tweaks %}
+{% block header %}{% endblock %}
 
 {% block body %}
 <!-- Main Content -->
@@ -19,13 +20,8 @@
             <!-- Follow-up Date -->
             <div class="mt-4">
                 <label for="date" class="block text-gray-700">Follow-up Date</label>
-                <input id="date" name="date" type="text" class="flatpickr mt-2 w-full p-2 border border-gray-300 rounded-lg">
-            </div>
-
-            <!-- Completed Checkbox -->
-            <div class="mt-4">
-                <label for="completed" class="block text-gray-700">Completed?</label>
-                <input type="checkbox" name="completed" id="completed" class="mt-2 p-2">
+                <!-- <input id="date" name="date" type="text" class="flatpickr mt-2 w-full p-2 border border-gray-300 rounded-lg"> -->
+                {% render_field form.date class="flatpickr mt-2 w-full p-2 border border-gray-300 rounded-lg" id="date"%}
             </div>
 
             <button type="submit" class="mt-6 w-full py-2 bg-teal-500 text-white rounded hover:bg-teal-600">Add Follow-Up</button>

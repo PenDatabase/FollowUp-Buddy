@@ -36,24 +36,30 @@
 <body class="bg-gradient-to-br from-gray-100 via-teal-50 to-orange-50 text-gray-800 font-sans">
     <div class="content">
         <!-- Header -->
-        <header class="bg-gradient-to-r from-teal-500 to-orange-500 text-white py-4 shadow-md">
-            <div class="container mx-auto flex justify-between items-center">
-                <h1 class="text-3xl font-bold">Follow Up Buddy</h1>
-                <nav>
-                    <a href="{% url 'home' %}" class="mx-3 hover:underline">Home</a>
-                    <a href="{% url 'add_followup' %}" class="mx-3 hover:underline">Add Follow-Up</a>
-                    <a href="{% url 'add_evangelism' %}" class="mx-3 hover:underline">Add Evangelism</a>
-                    
-                    {% if not user.is_authenticated %}
-                        <a href="#" class="mx-3 hover:underline">Login</a>
-                        <a href="#" class="mx-3 hover:underline">Sign Up</a>
-                    {% else %}
-                        <a href="#" class="mx-3 hover:underline">Log Out</a>
-                    {% endif %}
+       {% if not exclude_header|default:False %}
+            <header class="bg-gradient-to-r from-teal-500 to-orange-500 text-white py-4 shadow-md">
+                <div class="container mx-auto flex justify-between items-center">
+                    <h1 class="text-3xl font-bold">Follow Up Buddy</h1>
+                    <nav>
+                        <a href="{% url 'home' %}" class="mx-3 hover:underline">Home</a>
+                        <a href="{% url 'add_followup' %}" class="mx-3 hover:underline">Add Follow-Up</a>
+                        <a href="{% url 'add_evangelism' %}" class="mx-3 hover:underline">Add Evangelism</a>
                         
-                </nav>
-            </div>
-        </header>
+                        {% if not user.is_authenticated %}
+                            <a href="{% url 'login' %}" class="mx-3 hover:underline">Login</a>
+                            <a href="{% url 'signup' %}" class="mx-3 hover:underline">Sign Up</a>
+                        {% else %}
+                            <form action="{% url 'logout' %}" method="post">
+                                {% csrf_token %}
+                                <button class="mx-3 hover:underline">Log Out</button>
+                            </form>
+                        {% endif %}
+                            
+                    </nav>
+                </div>
+            </header>
+    
+        {% endif %}
 
         {% block body %}
         {% endblock body %}

@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponse
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
@@ -12,8 +12,10 @@ from .forms import EvangelismForm, FollowUpForm
 
 def dashboard(request):
     context = {}
-
-    activity = recommend_activity()
+    if request.user.is_authenticated:
+        activity = recommend_activity(evangelist=request.user)
+    else:
+        activity = recommend_activity()
     if activity is not None:
         context["followup"] = activity
     
@@ -25,6 +27,7 @@ def dashboard(request):
 
 
 
+@login_required
 def calendar_view(request, year=None, month=None):
     # Get current year and month if not provided
     if year is None or month is None:
@@ -48,11 +51,11 @@ def calendar_view(request, year=None, month=None):
     calendar_days = []
     for day in range(1, num_days + 1):
         date = datetime(year, month, day)
-        has_followup = FollowUp.objects.filter(completed=True, date=date).exists()
+        has_evangelism = Evangelism.objects.filter(date=date).exists()
         calendar_days.append({
             'day': day,
             'date': date.strftime('%Y-%m-%d'),
-            'has_followup': has_followup
+            'has_evangelism': has_evangelism
         })
 
     # Calculate previous and next months
@@ -74,6 +77,10 @@ def calendar_view(request, year=None, month=None):
     }
     return render(request, 'tracker/calendar.html', context)
 
+
+@login_required
+def activity_list(request):
+    return HttpResponse("hello")
 
 
 @login_required
