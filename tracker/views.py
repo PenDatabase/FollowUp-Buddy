@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect, HttpResponse
-from django.urls import reverse
+from django.views.generic import CreateView, ListView, TemplateView
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse_lazy
 from datetime import datetime
 from calendar import monthrange
 from .utils import recommend_activity
@@ -10,6 +12,7 @@ from .forms import EvangelismForm, FollowUpForm
 
 
 
+@login_required
 def dashboard(request):
     context = {}
     if request.user.is_authenticated:
@@ -20,10 +23,28 @@ def dashboard(request):
         context["followup"] = activity
     
 
-    context["total_evangelism"] = Evangelism.objects.all().count()
-    context["total_followup"] = FollowUp.objects.filter(completed=True).count()
+    context["total_evangelism"] = Evangelism.objects.filter(evangelist=request.user).count()
+    context["total_followup"] = FollowUp.objects.filter(evangelism__evangelist=request.user).count()
 
     return render(request, "tracker/home.html", context)
+
+
+class HomeView(LoginRequiredMixin, TemplateView):
+    template_name = "tracker/home.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+
+        if self.request.user.is_authenticated:
+            context["followup"] = recommend_activity(evangelist=user)
+        else:
+            context["followup"] = recommend_activity()
+
+        context["total_evangelism"] = Evangelism.objects.filter(evangelist=user).count()
+        context["total_followup"] = FollowUp.objects.filter(evangelism__evangelist=user).count()
+        return context
+    
 
 
 
@@ -51,7 +72,10 @@ def calendar_view(request, year=None, month=None):
     calendar_days = []
     for day in range(1, num_days + 1):
         date = datetime(year, month, day)
-        has_evangelism = Evangelism.objects.filter(date=date).exists()
+        if Evangelism.objects.filter(date=date).exists() or FollowUp.objects.filter(date=date).exists():
+            has_evangelism = True
+        else:
+            has_evangelism = False
         calendar_days.append({
             'day': day,
             'date': date.strftime('%Y-%m-%d'),
@@ -78,35 +102,25 @@ def calendar_view(request, year=None, month=None):
     return render(request, 'tracker/calendar.html', context)
 
 
-@login_required
-def activity_list(request):
-    return HttpResponse("hello")
 
+class EvangelismListing(LoginRequiredMixin, ListView):
+    template_name = "tracker/evangelism_listing.html"
+    context_object_name = "evangelisms"
 
-@login_required
-def add_evangelism(request):
-    if request.method == "POST":
-        form = EvangelismForm(request.POST)
-
-        if form.is_valid():
-            evangelism = form.save(commit=False)
-            evangelism.evangelist = request.user #Make evangelist current logged in user
-            evangelism.save()
-
-        else:
-            return render(request, "tracker/add_evangelism.html", context)
-        
+    def get_queryset(self):
+        return Evangelism.objects.filter(evangelist= self.request.user).all()
     
-    form = EvangelismForm()
-    context = {
-        "form":form
-    }
-    return render(request, "tracker/add_evangelism.html", context)
 
 
+class AddEvangelism(LoginRequiredMixin, CreateView):
+    form_class = EvangelismForm
+    template_name = "tracker/add_evangelism.html"
+    success_url = reverse_lazy("home")
 
-
-
+    def form_valid(self, form):
+        form.instance.evangelist = self.request.user
+        return super().form_valid(form)
+    
 
 
 @login_required
@@ -119,7 +133,9 @@ def add_followup(request):
             return redirect("home")
 
     form = FollowUpForm(evangelist=request.user)
+    evangelisms = Evangelism.objects.filter(evangelist=request.user).all()
     context = {
         "form": form,
+        "evangelisms": evangelisms
     }
     return render(request, "tracker/add_followup.html", context)

@@ -15,7 +15,7 @@ class Evangelism(models.Model):
     course = models.CharField(max_length=200, null=True)
     location = models.CharField(max_length=255, null=True)
     date = models.DateField()
-    description = models.TextField()
+    description = models.TextField(blank=True)
     faith = models.CharField(max_length=20, choices=FAITH_STATUS)
     relevance = models.IntegerField(default=2)
     completed = models.BooleanField(default=False)
@@ -39,5 +39,6 @@ class Evangelism(models.Model):
 
 class FollowUp(models.Model):
     evangelism = models.ForeignKey(Evangelism, on_delete=models.CASCADE)
+    description = models.TextField(blank=True)
     date = models.DateField()
     completed = models.BooleanField(default=False)

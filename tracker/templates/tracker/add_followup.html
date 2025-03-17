@@ -14,14 +14,20 @@
             <!-- Evangelism Selection -->
             <div class="mt-4">
                 <label for="evangelism" class="block text-gray-700">Select Evangelism</label>
-                {% render_field form.evangelism class="mt-2 w-full p-2 border border-gray-300 rounded-lg" %}
+                <input type="text" id="evangelism_name" class="mt-2 w-full p-2 border border-gray-300 rounded-lg" readonly>
+                <input type="hidden" id="evangelism" name="evangelism">
+                <button type="button" id="openModal" class="mt-2 py-1 px-3 bg-blue-500 text-white rounded hover:bg-blue-600">Choose Evangelism</button>
             </div>
 
             <!-- Follow-up Date -->
             <div class="mt-4">
                 <label for="date" class="block text-gray-700">Follow-up Date</label>
-                <!-- <input id="date" name="date" type="text" class="flatpickr mt-2 w-full p-2 border border-gray-300 rounded-lg"> -->
-                {% render_field form.date class="flatpickr mt-2 w-full p-2 border border-gray-300 rounded-lg" id="date"%}
+                {% render_field form.date class="flatpickr mt-2 w-full p-2 border border-gray-300 rounded-lg" id="date" %}
+            </div>
+
+            <div class="mt-4">
+                <label for="date" class="block text-gray-700">Describe your observations (Optional)</label>
+                {% render_field form.description class="mt-2 w-full p-2 border border-gray-300 rounded-lg" id="date" %}
             </div>
 
             <button type="submit" class="mt-6 w-full py-2 bg-teal-500 text-white rounded hover:bg-teal-600">Add Follow-Up</button>
@@ -29,4 +35,46 @@
     </div>
 </main>
 
+<!-- Modal -->
+<div id="evangelismModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden flex justify-center items-center">
+    <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+        <h3 class="text-lg font-semibold mb-4">Select Evangelism</h3>
+        <div class="max-h-80 overflow-y-auto rounded-lg">
+            <ul id="evangelismList" class="space-y-2">
+                {% for evangelism in evangelisms  %}
+                    <li class="p-2 bg-gray-100 rounded cursor-pointer hover:bg-gray-200" data-id="{{ evangelism.id }}">{{ evangelism }}</li>    
+                {% endfor %}
+                
+            </ul>
+        </div>
+        <div class="mt-4 flex justify-end">
+            <button id="closeModal" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const evangelismInput = document.getElementById("evangelism");
+        const modal = document.getElementById("evangelismModal");
+        const openModal = document.getElementById("openModal");
+        const closeModal = document.getElementById("closeModal");
+        const evangelismList = document.getElementById("evangelismList");
+
+        openModal.addEventListener("click", function () {
+            modal.classList.remove("hidden");
+        });
+
+        closeModal.addEventListener("click", function () {
+            modal.classList.add("hidden");
+        });
+
+        evangelismList.addEventListener("click", function (event) {
+            if (event.target.tagName === "LI") {
+                evangelismInput.value = event.target.getAttribute("data-id");
+                modal.classList.add("hidden");
+            }
+        });
+    });
+</script>
 {% endblock body %}

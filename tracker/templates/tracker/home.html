@@ -41,13 +41,12 @@
                     <div class="mt-4 text-orange-700 font-bold text-3xl">{{ total_evangelism }} <small>{% if total_evangelism != 1 %}Evangelisms {% else %}Evangelism {% endif %}</small></div>
                 </div>
 
-                <!-- Quick View -->
                 <div class="bg-white p-6 rounded-lg shadow-md">
                     <h3 class="text-lg font-bold text-teal-600">Quick View</h3>
                     <p class="mt-2 text-gray-600">Check your follow-ups in:</p>
                     <div class="mt-4 flex space-x-4">
                         <a href="{% url 'activity_calendar' %}"><button class="px-4 py-2 bg-teal-500 text-white rounded hover:bg-teal-600">Calendar</button></a>
-                        <button class="px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600">List</button>
+                        <a href="{% url 'evangelism-listing' %}"><button class="px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600">List</button></a>
                     </div>
                 </div>
             </div>

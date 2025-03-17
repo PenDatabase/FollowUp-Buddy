@@ -133,6 +133,6 @@ JAZZMIN_SETTINGS = {
     "site_brand": "FollowUp Buddy",
 }
 
-
+LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "home"
 LOGOUT_REDIRECT_URL = "home"

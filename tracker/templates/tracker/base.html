@@ -39,23 +39,35 @@
        {% if not exclude_header|default:False %}
             <header class="bg-gradient-to-r from-teal-500 to-orange-500 text-white py-4 shadow-md">
                 <div class="container mx-auto flex justify-between items-center">
-                    <h1 class="text-3xl font-bold">Follow Up Buddy</h1>
-                    <nav>
-                        <a href="{% url 'home' %}" class="mx-3 hover:underline">Home</a>
-                        <a href="{% url 'add_followup' %}" class="mx-3 hover:underline">Add Follow-Up</a>
-                        <a href="{% url 'add_evangelism' %}" class="mx-3 hover:underline">Add Evangelism</a>
-                        
+                    <h1 class="text-3xl font-bold">
+                        <a href="{% url 'home' %}">Follow Up Buddy</a>
+                    </h1>
+                    <nav class="flex space-x-4">
+                        <a href="{% url 'add_followup' %}" class="px-4 py-2 bg-white text-gray-800 font-medium rounded-lg shadow-md hover:bg-gray-200 transition duration-300">
+                            Add Follow-Up
+                        </a>
+                        <a href="{% url 'add_evangelism' %}" class="px-4 py-2 bg-white text-gray-800 font-medium rounded-lg shadow-md hover:bg-gray-200 transition duration-300">
+                            Add Evangelism
+                        </a>
+                    
                         {% if not user.is_authenticated %}
-                            <a href="{% url 'login' %}" class="mx-3 hover:underline">Login</a>
-                            <a href="{% url 'signup' %}" class="mx-3 hover:underline">Sign Up</a>
+                            <a href="{% url 'login' %}" class="px-4 py-2 bg-gray-900 text-white font-medium rounded-lg shadow-md hover:bg-gray-700 transition duration-300">
+                                Login
+                            </a>
+                            <a href="{% url 'signup' %}" class="px-4 py-2 bg-gray-500 text-white font-medium rounded-lg shadow-md hover:bg-orange-600 transition duration-300">
+                                Sign Up
+                            </a>
                         {% else %}
                             <form action="{% url 'logout' %}" method="post">
                                 {% csrf_token %}
-                                <button class="mx-3 hover:underline">Log Out</button>
+                                <button type="submit" class="px-4 py-2 bg-black text-white font-medium rounded-lg shadow-md hover:bg-red-100 transition duration-300">
+                                    Log Out
+                                </button>
                             </form>
                         {% endif %}
-                            
                     </nav>
+                    
+                    
                 </div>
             </header>
     
