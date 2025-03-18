@@ -12,23 +12,6 @@ from .forms import EvangelismForm, FollowUpForm
 
 
 
-@login_required
-def dashboard(request):
-    context = {}
-    if request.user.is_authenticated:
-        activity = recommend_activity(evangelist=request.user)
-    else:
-        activity = recommend_activity()
-    if activity is not None:
-        context["followup"] = activity
-    
-
-    context["total_evangelism"] = Evangelism.objects.filter(evangelist=request.user).count()
-    context["total_followup"] = FollowUp.objects.filter(evangelism__evangelist=request.user).count()
-
-    return render(request, "tracker/home.html", context)
-
-
 class HomeView(LoginRequiredMixin, TemplateView):
     template_name = "tracker/home.html"
 
@@ -103,6 +86,8 @@ def calendar_view(request, year=None, month=None):
 
 
 
+
+
 class EvangelismListing(LoginRequiredMixin, ListView):
     template_name = "tracker/evangelism_listing.html"
     context_object_name = "evangelisms"
@@ -110,6 +95,7 @@ class EvangelismListing(LoginRequiredMixin, ListView):
     def get_queryset(self):
         return Evangelism.objects.filter(evangelist= self.request.user).all()
     
+
 
 
 class AddEvangelism(LoginRequiredMixin, CreateView):
@@ -139,3 +125,21 @@ def add_followup(request):
         "evangelisms": evangelisms
     }
     return render(request, "tracker/add_followup.html", context)
+
+
+class AddFollowUp(LoginRequiredMixin, CreateView):
+    form_class = FollowUpForm
+    template_name = "tracker/add_followup.html"
+    success_url = reverse_lazy("home")
+
+    def get_form(self, form_class = None):
+        form = super().get_form(form_class)
+        form.fields["evangelism"].queryset = Evangelism.objects.filter(evangelist= self.request.user)
+        return form
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        form = self.get_form(self.form_class)
+        context["evangelisms"] = form.fields["evangelism"].queryset
+        return context
+    

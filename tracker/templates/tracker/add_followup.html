@@ -8,29 +8,41 @@
     <!-- Follow-up Form -->
     <div class="bg-white p-6 rounded-lg shadow-lg max-w-2xl mx-auto">
         <h2 class="text-xl font-bold text-black-600">Add Follow-Up</h2>
-        <form action="{% url 'add_followup' %}" method="post">
+        <form action="{% url 'add-followup' %}" method="post">
             {% csrf_token %}
             
+            <!-- Error display section -->
+            {% if form.errors %}
+              <div class="bg-red-100 mt-2 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                <strong>Error:</strong> Please correct the errors below.
+              </div>
+              {{ form.non_field.errors.0 }}
+  
+            {% endif %}
+
             <!-- Evangelism Selection -->
             <div class="mt-4">
                 <label for="evangelism" class="block text-gray-700">Select Evangelism</label>
-                <input type="text" id="evangelism_name" class="mt-2 w-full p-2 border border-gray-300 rounded-lg" readonly>
+                <input type="text" id="evangelism_name" class="mt-2 w-full p-2 border border-gray-300 rounded-lg" readonly required>
                 <input type="hidden" id="evangelism" name="evangelism">
-                <button type="button" id="openModal" class="mt-2 py-1 px-3 bg-blue-500 text-white rounded hover:bg-blue-600">Choose Evangelism</button>
+                <button type="button" id="openModal" class="px-4 py-2 mt-1 bg-teal-500 text-white rounded hover:bg-teal-600">Choose Evangelism</button>
+                <p class="text-red-500 text-sm mt-1">{{ form.evangelism.errors.0 }}</p>
             </div>
 
             <!-- Follow-up Date -->
             <div class="mt-4">
                 <label for="date" class="block text-gray-700">Follow-up Date</label>
-                {% render_field form.date class="flatpickr mt-2 w-full p-2 border border-gray-300 rounded-lg" id="date" %}
+                {% render_field form.date class="flatpickr mt-2 w-full p-2 border border-gray-300 rounded-lg" id="date" required="required" %}
+                <p class="text-red-500 text-sm mt-1">{{ form.date.errors.0 }}</p>
             </div>
 
             <div class="mt-4">
                 <label for="date" class="block text-gray-700">Describe your observations (Optional)</label>
-                {% render_field form.description class="mt-2 w-full p-2 border border-gray-300 rounded-lg" id="date" %}
+                {% render_field form.description class="mt-2 w-full p-2 border border-gray-300 rounded-lg" id="date" required="required" %}
+                <p class="text-red-500 text-sm mt-1">{{ form.description.errors.0 }}</p>
             </div>
 
-            <button type="submit" class="mt-6 w-full py-2 bg-teal-500 text-white rounded hover:bg-teal-600">Add Follow-Up</button>
+            <button type="submit" class="mt-6 w-full py-2 bg-orange-500 text-white rounded hover: bg-orange-400">Add Follow-Up</button>
         </form>
     </div>
 </main>
@@ -56,6 +68,7 @@
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const evangelismInput = document.getElementById("evangelism");
+        const evangelismNameInput = document.getElementById("evangelism_name");
         const modal = document.getElementById("evangelismModal");
         const openModal = document.getElementById("openModal");
         const closeModal = document.getElementById("closeModal");
@@ -71,7 +84,8 @@
 
         evangelismList.addEventListener("click", function (event) {
             if (event.target.tagName === "LI") {
-                evangelismInput.value = event.target.getAttribute("data-id");
+                evangelismInput.value = event.target.dataset.id;
+                evangelismNameInput.value = event.target.textContent
                 modal.classList.add("hidden");
             }
         });
