@@ -1,0 +1,58 @@
+{% extends 'tracker/base.html' %}
+
+{% block title %}Evangelism Details - {% endblock title %}
+
+{% block body %}
+<div class="container mx-auto my-10 p-6 bg-white shadow-lg rounded-lg">
+    <h2 class="text-3xl font-bold text-teal-600 mb-4">My Evangelism</h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+            <p class="text-lg font-semibold">Person Evangelized To:</p>
+            <p class="text-gray-700">{{ evangelism.person_name }}</p>
+        </div>
+        <div>
+            <p class="text-lg font-semibold">Course:</p>
+            <p class="text-gray-700">{{ evangelism.course|default:'N/A' }}</p>
+        </div>
+        <div>
+            <p class="text-lg font-semibold">Location:</p>
+            <p class="text-gray-700">{{ evangelism.location|default:'N/A' }}</p>
+        </div>
+        <div>
+            <p class="text-lg font-semibold">Date:</p>
+            <p class="text-gray-700">{{ evangelism.date }}</p>
+        </div>
+        <div>
+            <p class="text-lg font-semibold">Faith Level:</p>
+            <p class="text-gray-700">{{ evangelism.get_faith_display }}</p>
+        </div>
+    </div>
+
+    <div class="mt-6 p-4 bg-gradient-to-r from-teal-50 to-orange-50 border-l-4 border-teal-500 rounded-lg shadow">
+        <p class="text-lg font-semibold text-gray-900">Description:</p>
+        <p class="text-gray-700 whitespace-pre-line italic">"{{ evangelism.description }}"</p>
+    </div>
+
+    <div class="mt-10">
+        <h3 class="text-2xl font-bold text-orange-600 mb-4">Follow-Ups</h3>
+        {% if followups %}
+            <ul class="space-y-4">
+                {% for followup in followups %}
+                    <li class="p-5 bg-white border border-gray-200 rounded-lg shadow-md hover:shadow-lg transition duration-300">
+                        <p class="font-semibold">{{ forloop.counter }}. <span class="text-teal-600">{{ followup.date }}</span></p>
+                        <p class="text-gray-700">{{ followup.description }}</p>
+                        <p class="mt-4">
+                            <a href="#" class="px-4 py-2 bg-orange-600 text-white text-sm font-semibold rounded-lg shadow-md hover:bg-teal-700 transition duration-300">
+                                View Detail
+                            </a>
+                        </p>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="text-gray-500 italic">No follow-ups recorded yet.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock body %}

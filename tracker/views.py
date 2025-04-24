@@ -1,8 +1,10 @@
-from django.shortcuts import render, redirect, HttpResponse
-from django.views.generic import CreateView, ListView, TemplateView
+from django.shortcuts import render, redirect
+from django.http.response import JsonResponse
+from django.views.generic import CreateView, ListView, TemplateView, DetailView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
+from django.db import models
 from datetime import datetime
 from calendar import monthrange
 from .utils import recommend_activity
@@ -56,13 +58,13 @@ def calendar_view(request, year=None, month=None):
     for day in range(1, num_days + 1):
         date = datetime(year, month, day)
         if Evangelism.objects.filter(date=date).exists() or FollowUp.objects.filter(date=date).exists():
-            has_evangelism = True
+            has_activity = True
         else:
-            has_evangelism = False
+            has_activity = False
         calendar_days.append({
             'day': day,
             'date': date.strftime('%Y-%m-%d'),
-            'has_evangelism': has_evangelism
+            'has_activity': has_activity
         })
 
     # Calculate previous and next months
@@ -142,4 +144,42 @@ class AddFollowUp(LoginRequiredMixin, CreateView):
         form = self.get_form(self.form_class)
         context["evangelisms"] = form.fields["evangelism"].queryset
         return context
+
+
+
+class EvangelismDetail(LoginRequiredMixin, DetailView):
+    model = Evangelism
+    template_name = "tracker/evangelism_detail.html"
+    context_object_name = "evangelism"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["followups"] = FollowUp.objects.filter(evangelism=self.object)
+        return context
     
+    
+    
+
+def activities(request):
+    if request.method == "GET":
+        date = request.GET.get("date")
+        if date:
+            evangelisms = [
+                {
+                    "person_name": e.person_name,
+                    "faith": e.faith,
+                    "detail_link": reverse("evangelism-detail", args=[e.pk])
+                }
+
+                for e in Evangelism.objects.filter(date=date)
+            ]
+
+            
+            followups = list(FollowUp.objects.filter(date=date).values(
+                "evangelism__person_name", "description"
+            ))
+
+            return JsonResponse({
+                "evangelisms": evangelisms,
+                "followups": followups
+            })

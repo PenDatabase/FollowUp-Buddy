@@ -31,6 +31,16 @@
             bottom: 0;
             width: 100%;
         }
+
+        #offcanvas {
+            z-index: 50; /* Higher than footer */
+        }
+        #overlay {
+            z-index: 40; /* Lower than offcanvas */
+        }
+        #footer {
+            z-index: 10; /* Ensure it's below the offcanvas */
+        }
     </style>
 </head>
 <body class="bg-gradient-to-br from-gray-100 via-teal-50 to-orange-50 text-gray-800 font-sans">
@@ -78,7 +88,7 @@
     </div>
 
     <!-- Footer -->
-    <footer>
+    <footer id="footer">
         <p>&copy; 2025 Follow Up Buddy. Made with care to support meaningful connections.</p>
     </footer>
 

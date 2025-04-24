@@ -2,60 +2,142 @@
 {% block header %}{% endblock %}
 
 {% block body %}
-    
-    
-        <!-- Main Content -->
-        <main class="flex-grow container mx-auto py-8">
-            <!-- Navigation Buttons -->
-            <div class="flex justify-between mb-6">
-                <!-- Previous Month -->
-                <a href="{% url 'activity_calendar' prev_year prev_month %}" 
-                   class="px-4 py-2 bg-teal-500 text-white rounded hover:bg-teal-600">
-                    Previous
-                </a>
+    <!-- Main Content -->
+    <main class="flex-grow container mx-auto py-8">
+        <!-- Navigation Buttons -->
+        <div class="flex justify-between mb-6">
+            <!-- Previous Month -->
+            <a href="{% url 'activity_calendar' prev_year prev_month %}" 
+               class="px-4 py-2 bg-teal-500 text-white rounded hover:bg-teal-600">
+                Previous
+            </a>
 
-                <h2 class="text-2xl font-bold text-teal-600">{{ month }} {{ year }} Calendar</h2>
+            <h2 class="text-2xl font-bold text-teal-600">{{ month }} {{ year }} Calendar</h2>
 
-                <!-- Next Month -->
-                <a href="{% url 'activity_calendar' next_year next_month %}" 
-                   class="px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600">
-                    Next
-                </a>
+            <!-- Next Month -->
+            <a href="{% url 'activity_calendar' next_year next_month %}" 
+               class="px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600">
+                Next
+            </a>
+        </div>
+
+        <!-- Calendar -->
+        <div class="bg-white p-6 rounded-lg shadow-lg">
+            <!-- Days of the Week -->
+            <div class="grid grid-cols-7 text-center text-gray-600 font-bold mb-4">
+                <span>Sun</span>
+                <span>Mon</span>
+                <span>Tue</span>
+                <span>Wed</span>
+                <span>Thu</span>
+                <span>Fri</span>
+                <span>Sat</span>
             </div>
 
-            <!-- Calendar -->
-            <div class="bg-white p-6 rounded-lg shadow-lg">
-                <!-- Days of the Week -->
-                <div class="grid grid-cols-7 text-center text-gray-600 font-bold mb-4">
-                    <span>Sun</span>
-                    <span>Mon</span>
-                    <span>Tue</span>
-                    <span>Wed</span>
-                    <span>Thu</span>
-                    <span>Fri</span>
-                    <span>Sat</span>
-                </div>
-                <!-- Calendar Grid -->
-                <div class="grid grid-cols-7 gap-2">
-                    <!-- Placeholder for first day alignment -->
-                    {% for _ in placeholders %}
-                    <div></div>
-                    {% endfor %}
+            <!-- Calendar Grid -->
+            <div class="grid grid-cols-7 gap-2">
+                <!-- Placeholder for first day alignment -->
+                {% for _ in placeholders %}
+                <div></div>
+                {% endfor %}
 
-                    <!-- Calendar Days -->
-                    {% for day in calendar_days %}
-                    <div class="p-2 rounded-lg text-center border 
-                        {% if day.has_evangelism %}bg-teal-100 hover:bg-teal-200{% else %}hover:bg-gray-100{% endif %} cursor-pointer">
-                        {% comment %}
-                        {% url 'followup_details' day.date %}
-                        {% endcomment %}
-                        <a href="#" class="{% if day.has_evangelism %}text-teal-700 font-bold{% else %}text-gray-700{% endif %}">
-                            {{ day.day }}
-                        </a>
-                    </div>
-                    {% endfor %}
+                <!-- Calendar Days -->
+                {% for day in calendar_days %}
+                <div class="p-2 rounded-lg text-center border cursor-pointer 
+                    {% if day.has_activity %}bg-teal-100 hover:bg-teal-200{% else %}hover:bg-gray-100{% endif %} "
+                    onclick="openOffcanvas(`{{ day.date }}`)">
+                    <span class="{% if day.has_activity %}text-teal-700 font-bold{% else %}text-gray-700{% endif %}">
+                        {{ day.day }}
+                    </span>
                 </div>
+                {% endfor %}
             </div>
-        </main>
+        </div>
+    </main>
+
+    <!-- Offcanvas Overlay -->
+    <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 hidden transition-opacity"></div>
+
+    <!-- Offcanvas Panel -->
+    <div id="offcanvas" class="fixed top-0 right-0 w-96 md:w-[40rem] h-full bg-white shadow-lg transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col z-50">
+        <!-- Header (Fixed) -->
+        <div class="bg-gradient-to-r from-teal-500 to-orange-500 text-white p-4 flex justify-between items-center">
+            <h2 class="text-xl font-semibold">Activities</h2>
+            <button onclick="closeOffcanvas()" class="text-white bg-black rounded-lg text-2xl pb-1 px-2 font-bold">&times;</button>
+        </div>
+
+        <!-- Scrollable Content -->
+        <div class="p-4 overflow-y-auto flex-1">
+            <h3 class="text-lg font-bold text-gray-800">Selected Date: 
+                <span id="selected-date" class="font-normal"></span>
+            </h3>
+            <div id="evangelism-list" class="mt-4 space-y-4"></div>
+        </div>
+    </div>
+
+    <script>
+        function openOffcanvas(date) {
+            console.log("Selected Date:", date); // Debugging
+            document.getElementById('selected-date').innerText = date;
+
+            fetch(`${window.location.origin}/activities?date=${date}`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log("Fetched Data:", data); // Debugging
+
+                    let list = document.getElementById('evangelism-list');
+                    list.innerHTML = '';
+
+                    if (!data.evangelisms?.length && !data.followups?.length) {
+                        list.innerHTML = '<p class="text-gray-500">No activities for this date.</p>';
+                        return;
+                    }
+
+                    // Display Evangelisms with "View More Details" button
+                    if (data.evangelisms.length > 0) {
+                        list.innerHTML += '<h3 class="text-xl font-bold text-teal-600 mt-4">Evangelism Records</h3>';
+                        data.evangelisms.forEach(evangelism => {
+                            list.innerHTML += `
+                                <div class="p-3 border border-gray-300 rounded-lg shadow-sm">
+                                    <p class="text-gray-800"><strong>Person Name:</strong> ${evangelism.person_name}</p>
+                                    <p class="text-gray-800"><strong>Faith Status:</strong> ${evangelism.faith}</p>
+                                    <a href="${evangelism.detail_link}" 
+                                        class="mt-2 inline-block px-3 py-1.5 bg-orange-500 text-white text-sm font-medium rounded-md shadow-md hover:bg-orange-400 active:bg-teal-700 transition duration-300">
+                                        View More Details
+                                    </a>
+
+                                </div>`;
+                        });
+                        list.innerHTML += '<br>'
+                    }
+
+                    // Display Follow-ups
+                    if (data.followups.length > 0) {
+                        list.innerHTML += '<h3 class="text-xl font-bold text-orange-600 mt-4">Follow-ups</h3>';
+                        data.followups.forEach(followup => {
+                            list.innerHTML += `
+                                <div class="p-3 border border-gray-300 rounded-lg shadow-sm">
+                                    <p class="text-gray-800"><strong>Person:</strong> ${followup.evangelism__person_name}</p>
+                                    <p class="text-gray-600"><strong>Description:</strong> ${followup.description || 'No details provided'}</p>
+                                </div>`;
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error("Error fetching activities:", error);
+                });
+
+            // Show Offcanvas & Overlay
+            document.getElementById('offcanvas').classList.remove('translate-x-full');
+            document.getElementById('overlay').classList.remove('hidden');
+        }
+
+        function closeOffcanvas() {
+            document.getElementById('offcanvas').classList.add('translate-x-full');
+            document.getElementById('overlay').classList.add('hidden');
+        }
+    </script>
+
+    
 
 {% endblock body %}
