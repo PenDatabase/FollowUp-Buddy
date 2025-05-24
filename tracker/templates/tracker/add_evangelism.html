@@ -3,50 +3,62 @@
 {% block header %}{% endblock %}
 
 {% block body %}
-    
-        <!-- Main Content -->
-        <main class="flex-grow container mx-auto py-8">
-            <!-- Evangelism Form -->
-            <div class="bg-white p-6 rounded-lg shadow-lg max-w-2xl mx-auto">
-                <h2 class="text-xl font-bold text-black-600">Add Evangelism</h2>
-                <form action="{% url 'add-evangelism' %}" method="post">
-                    {% csrf_token %}
-                    
-                    <div class="mt-4">
-                        <label for="person_name" class="block text-gray-700">Person's Name</label>
-                        {% render_field form.person_name class="mt-2 w-full p-2 border border-gray-300 rounded-lg" %}
-                    </div>
-                    
-                    <div class="mt-4">
-                        <label for="course" class="block text-gray-700">Course</label>
-                        {% render_field form.course required=False class="mt-2 w-full p-2 border border-gray-300 rounded-lg" %}
-                    </div>
-                    
-                    <div class="mt-4">
-                        <label for="location" class="block text-gray-700">Location</label>
-                        {% render_field form.location class="mt-2 w-full p-2 border border-gray-300 rounded-lg" %}
-                    </div>
-                    
-                    <div class="mt-4">
-                        <label for="date" class="block text-gray-700">Date</label>
-                        <input id="date" name="date" type="text" class="flatpickr mt-2 w-full p-2 border border-gray-300 rounded-lg">
-                    </div>
+<!-- Main Content -->
+<main class="flex-grow container mx-auto py-8">
+    <!-- Evangelism Form -->
+    <div class="bg-white p-6 rounded-lg shadow-lg max-w-2xl mx-auto">
+        <h2 class="text-xl font-bold text-black-600">Add Evangelism</h2>
+        <form action="{% url 'add-evangelism' %}" method="post">
+            {% csrf_token %}
 
-                    <div class="mt-4">
-                        <label for="description" class="block text-gray-700">Description</label>
-                        {% render_field form.description class="mt-2 w-full p-2 border border-gray-300 rounded-lg" %}
-                    </div>
-
-                    <div class="mt-4">
-                        <label for="faith" class="block text-gray-700">Faith</label>
-                        {% render_field form.faith class="mt-2 w-full p-2 border border-gray-300 rounded-lg" %}
-                    </div>
-
-                    <button type="submit" class="mt-6 w-full py-2 bg-teal-500 text-white rounded hover:bg-teal-600">Add Evangelism</button>
-                </form>
+            <!-- Person's Name -->
+            <div class="mt-4">
+                <label for="person_name" class="block text-gray-700">Person's Name</label>
+                {% render_field form.person_name class="mt-2 w-full p-2 border border-gray-300 rounded-lg" %}
             </div>
-        </main>
 
+            <!-- Course -->
+            <div class="mt-4">
+                <label for="course" class="block text-gray-700">Course</label>
+                {% render_field form.course required=False class="mt-2 w-full p-2 border border-gray-300 rounded-lg" %}
+            </div>
 
+            <!-- Location -->
+            <div class="mt-4">
+                <label for="location" class="block text-gray-700">Location</label>
+                {% render_field form.location class="mt-2 w-full p-2 border border-gray-300 rounded-lg" %}
+            </div>
+
+            <!-- Date -->
+            <div class="mt-4">
+                <label for="date" class="block text-gray-700">Date</label>
+                <input id="date" name="date" type="text" class="flatpickr mt-2 w-full p-2 border border-gray-300 rounded-lg">
+            </div>
+
+            <!-- Description -->
+            <div class="mt-4">
+                <label for="description" class="block text-gray-700">Description</label>
+                {% render_field form.description class="mt-2 w-full p-2 border border-gray-300 rounded-lg" %}
+            </div>
+
+            <!-- Faith -->
+            <div class="mt-4">
+                <label for="faith" class="block text-gray-700">Faith</label>
+                {% render_field form.faith class="mt-2 w-full p-2 border border-gray-300 rounded-lg" %}
+            </div>
+
+            <!-- Completed Checkbox -->
+            <div class="mt-6 p-4 border border-green-400 bg-green-50 rounded-lg">
+                <div class="flex items-center">
+                    {% render_field form.completed class="mr-2" id="completed" %}
+                    <label for="completed" class="text-green-800 font-medium">Mark this activity as completed</label>
+                </div>
+                <p class="text-red-500 text-sm mt-1">{{ form.completed.errors.0 }}</p>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="mt-6 w-full py-2 bg-teal-500 text-white rounded hover:bg-teal-600">Add Evangelism</button>
+        </form>
+    </div>
+</main>
 {% endblock body %}
-    

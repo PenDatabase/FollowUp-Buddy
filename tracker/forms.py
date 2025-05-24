@@ -3,9 +3,16 @@ from .models import FollowUp, Evangelism
 
 
 class FollowUpForm(forms.ModelForm):
+    completed = forms.BooleanField()
     class Meta:
         model = FollowUp
-        fields = ["evangelism", "description", "date"]
+        fields = ["evangelism", "description", "date", "completed"]
+    
+    def save(self, commit = ...):
+        followup = super().save(commit)
+        followup.evangelism.completed = self.completed
+
+    
 
 
 
@@ -19,4 +26,5 @@ class EvangelismForm(forms.ModelForm):
                   "location", 
                   "date", 
                   "description", 
-                  "faith"]
+                  "faith",
+                  "completed"]

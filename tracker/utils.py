@@ -3,9 +3,9 @@ from .models import Evangelism
 
 def recommend_activity(evangelist = None):
     evangelisms = Evangelism.objects.filter(
-                                            evangelist=evangelist, 
-                                            completed=False
-                                            ).order_by("date")#.select_related("followup_set")
+                    evangelist=evangelist, 
+                    completed=False
+                ).order_by("date")#.select_related("followup_set")
 
     if evangelisms.count() >= 7:
         for evangelism in evangelisms:

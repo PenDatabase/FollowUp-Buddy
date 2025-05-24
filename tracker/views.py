@@ -4,7 +4,6 @@ from django.views.generic import CreateView, ListView, TemplateView, DetailView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse, reverse_lazy
-from django.db import models
 from datetime import datetime
 from calendar import monthrange
 from .utils import recommend_activity

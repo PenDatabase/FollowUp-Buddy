@@ -12,7 +12,7 @@ class Evangelism(models.Model):
     }
     evangelist = models.ForeignKey(User, on_delete=models.CASCADE)
     person_name = models.CharField(max_length=200)
-    course = models.CharField(max_length=200, null=True)
+    course = models.CharField(max_length=200, null=True, blank=True)
     location = models.CharField(max_length=255, null=True)
     date = models.DateField()
     description = models.TextField(blank=True)

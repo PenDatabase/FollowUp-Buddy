@@ -17,7 +17,6 @@
                 <strong>Error:</strong> Please correct the errors below.
               </div>
               {{ form.non_field.errors.0 }}
-  
             {% endif %}
 
             <!-- Evangelism Selection -->
@@ -36,13 +35,25 @@
                 <p class="text-red-500 text-sm mt-1">{{ form.date.errors.0 }}</p>
             </div>
 
+            <!-- Description -->
             <div class="mt-4">
-                <label for="date" class="block text-gray-700">Describe your observations (Optional)</label>
-                {% render_field form.description class="mt-2 w-full p-2 border border-gray-300 rounded-lg" id="date" required="required" %}
+                <label for="description" class="block text-gray-700">Describe your observations (Optional)</label>
+                {% render_field form.description class="mt-2 w-full p-2 border border-gray-300 rounded-lg" id="description" %}
                 <p class="text-red-500 text-sm mt-1">{{ form.description.errors.0 }}</p>
             </div>
 
-            <button type="submit" class="mt-6 w-full py-2 bg-orange-500 text-white rounded hover: bg-orange-400">Add Follow-Up</button>
+            <!-- Completed Checkbox -->
+            <!-- Completed Checkbox -->
+            <div class="mt-6 bg-yellow-50 border border-yellow-300 p-4 rounded-lg shadow-sm">
+                <div class="flex items-center">
+                    {% render_field form.completed class="h-5 w-5 text-orange-500 mr-3" id="completed" %}
+                    <label for="completed" class="text-gray-800 font-semibold text-sm md:text-base">Mark this activity as completed</label>
+                </div>
+                <p class="text-red-500 text-sm mt-1">{{ form.completed.errors.0 }}</p>
+            </div>
+
+
+            <button type="submit" class="mt-6 w-full py-2 bg-orange-500 text-white rounded hover:bg-orange-400">Add Follow-Up</button>
         </form>
     </div>
 </main>
@@ -56,7 +67,6 @@
                 {% for evangelism in evangelisms  %}
                     <li class="p-2 bg-gray-100 rounded cursor-pointer hover:bg-gray-200" data-id="{{ evangelism.id }}">{{ evangelism }}</li>    
                 {% endfor %}
-                
             </ul>
         </div>
         <div class="mt-4 flex justify-end">
@@ -85,7 +95,7 @@
         evangelismList.addEventListener("click", function (event) {
             if (event.target.tagName === "LI") {
                 evangelismInput.value = event.target.dataset.id;
-                evangelismNameInput.value = event.target.textContent
+                evangelismNameInput.value = event.target.textContent;
                 modal.classList.add("hidden");
             }
         });
