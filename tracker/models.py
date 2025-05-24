@@ -17,7 +17,7 @@ class Evangelism(models.Model):
     date = models.DateField()
     description = models.TextField(blank=True)
     faith = models.CharField(max_length=20, choices=FAITH_STATUS)
-    relevance = models.IntegerField(default=2)
+    relevance = models.IntegerField(blank=True)
     completed = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
@@ -32,13 +32,12 @@ class Evangelism(models.Model):
         return super().save(*args, **kwargs)
     
     def __str__(self):
-        return f"{self.evangelist} -> {self.person_name}"
+        return self.person_name
 
 
 
 
 class FollowUp(models.Model):
-    evangelism = models.ForeignKey(Evangelism, on_delete=models.CASCADE)
+    evangelism = models.ForeignKey(Evangelism, on_delete=models.CASCADE, related_name="followups")
     description = models.TextField(blank=True)
     date = models.DateField()
-    completed = models.BooleanField(default=False)
