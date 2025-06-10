@@ -9,7 +9,7 @@ def recommend_activity(evangelist = None):
 
     if evangelisms.count() >= 7:
         for evangelism in evangelisms:
-            if evangelism.followup_set.exists():
+            if evangelism.followups.exists():
                 last_followup = evangelism.followup_set.order_by("-date").first()
                 if (timezone.now().date() - last_followup.date).days >= 7:
                     return last_followup
