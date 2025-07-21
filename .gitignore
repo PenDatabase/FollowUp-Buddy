@@ -7,9 +7,6 @@ __pycache__/
 # Django migrations
 */migrations/*
 
-# Database
-*.sqlite3
-db.sqlite3
 
 # Media and static files
 /media/
