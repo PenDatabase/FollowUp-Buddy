@@ -81,22 +81,14 @@ WSGI_APPLICATION = 'followup_buddy.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+                                                                                        
 
-# Database configuration
-if os.environ.get('POSTGRES_URL'):
-    # Production database (Vercel Postgres)
-    import dj_database_url
-    DATABASES = {
-        'default': dj_database_url.parse(os.environ.get('POSTGRES_URL'))
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
-else:
-    # Development database (SQLite)
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
+}
 
 
 # Password validation
