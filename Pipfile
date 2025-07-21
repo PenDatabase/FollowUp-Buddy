@@ -9,6 +9,9 @@ django-jazzmin = "*"
 django-debug-toolbar = "*"
 django-widget-tweaks = "*"
 faker = "*"
+psycopg2-binary = "*"
+dj-database-url = "*"
+python-dotenv = "*"
 
 [dev-packages]
 
