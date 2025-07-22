@@ -10,7 +10,10 @@ class FollowUpForm(forms.ModelForm):
     
     def save(self, commit = ...):
         followup = super().save(commit)
-        followup.evangelism.completed = self.completed
+        followup.evangelism.completed = self.cleaned_data['completed']
+        if commit:
+            followup.evangelism.save()
+        return followup
 
     
 

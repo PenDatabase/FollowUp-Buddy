@@ -90,6 +90,7 @@ if DATABASE_URL:
     DATABASES = {
         'default': dj_database_url.parse(DATABASE_URL)
     }
+    print(f"Connected to database: {DATABASES['default']['ENGINE']}")
 else:
     # Development database (SQLite)
     DATABASES = {
@@ -98,6 +99,7 @@ else:
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
+    print("Using SQLite database")
 
 
 # Password validation
@@ -169,3 +171,39 @@ if not DEBUG:
     CSRF_TRUSTED_ORIGINS = [
         'https://*.railway.app',
     ]
+
+
+
+# Add logging configuration
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO',
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+    },
+}
+
+# For Railway deployment - enable more verbose logging
+if os.getenv('RAILWAY_ENVIRONMENT'):
+    LOGGING['root']['level'] = 'DEBUG'
+    LOGGING['loggers']['django']['level'] = 'DEBUG'
