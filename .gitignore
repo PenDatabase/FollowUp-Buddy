@@ -58,3 +58,7 @@ test_db/
 # Other IDEs (e.g., JetBrains, Sublime Text, etc.)
 *.sublime-project
 *.sublime-workspace
+
+
+# Databases
+*.sqlite3
