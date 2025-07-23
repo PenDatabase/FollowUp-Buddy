@@ -6,54 +6,60 @@
 <!-- Main Content -->
 <main class="flex-grow container mx-auto py-8">
     <!-- Follow-up Form -->
-    <div class="bg-white p-6 rounded-lg shadow-lg max-w-2xl mx-auto">
-        <h2 class="text-xl font-bold text-black-600">Add Follow-Up</h2>
-        <form action="{% url 'add-followup' %}" method="post">
+    <div class="bg-white p-8 rounded-xl shadow-lg max-w-2xl mx-auto">
+        <div class="text-center mb-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-2">Schedule Your Follow-Up</h2>
+            <p class="text-gray-600">Plan your next meaningful encounter</p>
+        </div>
+        <form action="{% url 'add-followup' %}" method="post" class="space-y-6">
             {% csrf_token %}
             
             <!-- Error display section -->
             {% if form.errors %}
-              <div class="bg-red-100 mt-2 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+              <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mb-4">
                 <strong>Error:</strong> Please correct the errors below.
               </div>
               {{ form.non_field.errors.0 }}
             {% endif %}
 
             <!-- Evangelism Selection -->
-            <div class="mt-4">
-                <label for="evangelism" class="block text-gray-700">Select Evangelism</label>
-                <input type="text" id="evangelism_name" class="mt-2 w-full p-2 border border-gray-300 rounded-lg" readonly required>
+            <div class="space-y-2">
+                <label for="evangelism" class="block text-sm font-semibold text-gray-700">📋 Select Evangelism</label>
+                <input type="text" id="evangelism_name" class="w-full p-3 border-2 border-gray-200 rounded-lg focus:border-teal-500 focus:ring-2 focus:ring-teal-200 transition-colors" readonly required placeholder="Choose an evangelism activity...">
                 <input type="hidden" id="evangelism" name="evangelism">
-                <button type="button" id="openModal" class="px-4 py-2 mt-1 bg-teal-500 text-white rounded hover:bg-teal-600">Choose Evangelism</button>
+                <button type="button" id="openModal" class="px-4 py-2 mt-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600 transition-colors font-medium">Choose Evangelism</button>
                 <p class="text-red-500 text-sm mt-1">{{ form.evangelism.errors.0 }}</p>
             </div>
 
             <!-- Follow-up Date -->
-            <div class="mt-4">
-                <label for="date" class="block text-gray-700">Follow-up Date</label>
-                {% render_field form.date class="flatpickr mt-2 w-full p-2 border border-gray-300 rounded-lg" id="date" required="required" %}
+            <div class="space-y-2">
+                <label for="date" class="block text-sm font-semibold text-gray-700">📅 When did you follow up?</label>
+                {% render_field form.date class="flatpickr w-full p-3 border-2 border-gray-200 rounded-lg focus:border-teal-500 focus:ring-2 focus:ring-teal-200 transition-colors" id="date" required="required" placeholder="Select follow-up date..." %}
                 <p class="text-red-500 text-sm mt-1">{{ form.date.errors.0 }}</p>
             </div>
 
             <!-- Description -->
-            <div class="mt-4">
-                <label for="description" class="block text-gray-700">Describe your observations (Optional)</label>
-                {% render_field form.description class="mt-2 w-full p-2 border border-gray-300 rounded-lg" id="description" %}
+            <div class="space-y-2">
+                <label for="description" class="block text-sm font-semibold text-gray-700">💭 Describe your observations (Optional)</label>
+                {% render_field form.description class="w-full p-3 border-2 border-gray-200 rounded-lg focus:border-teal-500 focus:ring-2 focus:ring-teal-200 transition-colors" id="description" placeholder="Share any notes or observations..." rows="3" %}
                 <p class="text-red-500 text-sm mt-1">{{ form.description.errors.0 }}</p>
             </div>
 
             <!-- Completed Checkbox -->
-            <!-- Completed Checkbox -->
-            <div class="mt-6 bg-yellow-50 border border-yellow-300 p-4 rounded-lg shadow-sm">
-                <div class="flex items-center">
-                    {% render_field form.completed class="h-5 w-5 text-orange-500 mr-3" id="completed" %}
-                    <label for="completed" class="text-gray-800 font-semibold text-sm md:text-base">Mark this activity as completed</label>
+            <div class="p-5 bg-gradient-to-r from-teal-50 to-orange-50 rounded-xl border-2 border-orange-100">
+                <div class="flex items-start space-x-4">
+                    {% render_field form.completed class="mt-1 h-5 w-5 text-teal-600 bg-white border-2 border-gray-300 rounded focus:ring-teal-500 focus:ring-2" id="completed" %}
+                    <div class="flex-1">
+                        <label for="completed" class="text-sm font-semibold text-gray-800 cursor-pointer">Mark this activity as completed</label>
+                        <p class="text-xs text-gray-600 mt-2">Prevents future follow-up suggestions for this activity</p>
+                    </div>
                 </div>
-                <p class="text-red-500 text-sm mt-1">{{ form.completed.errors.0 }}</p>
+                <p class="text-red-500 text-sm mt-3">{{ form.completed.errors.0 }}</p>
             </div>
 
-
-            <button type="submit" class="mt-6 w-full py-2 bg-orange-500 text-white rounded hover:bg-orange-400">Add Follow-Up</button>
+            <button type="submit" class="w-full py-4 bg-gradient-to-r from-teal-500 to-orange-500 text-white font-semibold rounded-xl hover:from-teal-600 hover:to-orange-600 transform hover:scale-[1.02] transition-all duration-200 shadow-lg hover:shadow-xl">
+                📝 Add Follow-Up
+            </button>
         </form>
     </div>
 </main>

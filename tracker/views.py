@@ -56,7 +56,7 @@ def calendar_view(request, year=None, month=None):
     calendar_days = []
     for day in range(1, num_days + 1):
         date = datetime(year, month, day)
-        if Evangelism.objects.filter(date=date).exists() or FollowUp.objects.filter(date=date).exists():
+        if Evangelism.objects.filter(date=date, evangelist=request.user).exists() or FollowUp.objects.filter(date=date, evangelism__evangelist=request.user).exists():
             has_activity = True
         else:
             has_activity = False

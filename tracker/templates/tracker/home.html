@@ -2,54 +2,131 @@
 {% block header %}{% endblock %}
 
 {% block body %}
-    
-        <!-- Main Content -->
-        <main class="flex-grow container mx-auto py-8">
-            <!-- Scheduled Activity -->
-            
-            {% if followup %}
-                <div class="bg-white p-6 rounded-lg shadow-lg">
-                    <h2 class="text-xl font-bold text-black-600">Today's Activity</h2>
-                    <p class="mt-2 text-gray-600">Here's your scheduled activity for today:</p>
-                    <div class="mt-4 bg-gradient-to-r from-orange-100 to-teal-100 p-5 rounded-lg shadow">
-                        <h3 class="font-bold text-gray-700">Follow up: <span class="text-orange-700">{{ followup.person_name }}</span></h3>
-                        <p class="font-bold text-gray-700 mt-2">Details: <span class="text-orange-700">{{ followup.location }}</span></p>
-                        <p class="font-bold text-gray-700 mt-2">Status: <span class="text-orange-700">{{ followup.faith }}</span></p>
-                    </div>
-                </div>
-            {% else %}
-                <div class="bg-white p-6 rounded-lg shadow-lg">
-                    <h2 class="text-xl font-bold text-black-600">Today's Activity</h2>
-                    <p class="mt-2 text-gray-600">Here's your scheduled activity for today:</p>
-                    <div class="mt-4 bg-gradient-to-r from-orange-100 to-teal-100 p-5 rounded-lg shadow">
-                        <h3 class="font-bold text-orange-700">Evangelism</h3>
-                        <p class="text-gray-700 mt-2">Listen, Go into the nations, and preach GOD's gospel.</p>
-                    </div>
-                </div>
-            {% endif %}
-                
+    <!-- Main Content -->
+    <main class="flex-grow container mx-auto py-8 px-4">
+        <!-- Welcome Section -->
+        <div class="text-center mb-10">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Welcome Back!</h1>
+            <p class="text-lg text-gray-600">Track your evangelism journey and follow-up activities</p>
+        </div>
 
-            <!-- Overview Section -->
-            <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Total Follow-Ups -->
-                <div class="bg-gradient-to-b from-teal-50 to-orange-50 p-6 rounded-lg shadow-md">
-                    <h3 class="text-lg font-bold text-black-600">Activity Sum up</h3>
-                    <p class="mt-2 text-gray-600">Track your activities so far:</p>
-                    
-                
-                    <div class="mt-4 text-orange-700 font-bold text-3xl">{{ total_followup }} <small>{% if total_followup != 1 %}Follow ups {% else %}Follow up {% endif %}</small></div>
-                    <div class="mt-4 text-orange-700 font-bold text-3xl">{{ total_evangelism }} <small>{% if total_evangelism != 1 %}Evangelisms {% else %}Evangelism {% endif %}</small></div>
+        <!-- Today's Activity -->
+        {% if followup %}
+            <div class="bg-white p-8 rounded-xl shadow-lg mb-8 max-w-4xl mx-auto">
+                <div class="text-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2">📅 Today's Activity</h2>
+                    <p class="text-gray-600">Here's your scheduled activity for today</p>
                 </div>
-
-                <div class="bg-white p-6 rounded-lg shadow-md">
-                    <h3 class="text-lg font-bold text-teal-600">Quick View</h3>
-                    <p class="mt-2 text-gray-600">Check your follow-ups in:</p>
-                    <div class="mt-4 flex space-x-4">
-                        <a href="{% url 'activity_calendar' %}"><button class="px-4 py-2 bg-teal-500 text-white rounded hover:bg-teal-600">Calendar</button></a>
-                        <a href="{% url 'evangelism-listing' %}"><button class="px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600">List</button></a>
+                <div class="bg-gradient-to-r from-teal-50 to-orange-50 p-6 rounded-xl border-2 border-orange-100">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-gradient-to-r from-teal-500 to-orange-500 text-white p-3 rounded-full mr-4">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800">Follow up: {{ followup.person_name }}</h3>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="flex items-center">
+                            <span class="text-teal-600 font-semibold mr-2">📍 Location:</span>
+                            <span class="text-gray-700">{{ followup.location }}</span>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="text-orange-600 font-semibold mr-2">🙏 Faith:</span>
+                            <span class="text-gray-700">{{ followup.faith }}</span>
+                        </div>
                     </div>
                 </div>
             </div>
-        </main>
+        {% else %}
+            <div class="bg-white p-8 rounded-xl shadow-lg mb-8 max-w-4xl mx-auto">
+                <div class="text-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2">🌟 Today's Mission</h2>
+                    <p class="text-gray-600">Your evangelism calling for today</p>
+                </div>
+                <div class="bg-gradient-to-r from-teal-50 to-orange-50 p-6 rounded-xl border-2 border-orange-100 text-center">
+                    <div class="bg-gradient-to-r from-teal-500 to-orange-500 text-white p-4 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+                        <span class="text-2xl">🚀</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Evangelism</h3>
+                    <p class="text-gray-700 italic">"Go into all the nations and preach God's gospel"</p>
+                </div>
+            </div>
+        {% endif %}
 
+        <!-- Overview Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
+            <!-- Activity Summary -->
+            <div class="bg-white p-8 rounded-xl shadow-lg">
+                <div class="text-center mb-6">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-2">📊 Activity Summary</h3>
+                    <p class="text-gray-600">Track your evangelism journey</p>
+                </div>
+                
+                <div class="space-y-6">
+                    <div class="bg-gradient-to-r from-teal-50 to-teal-100 p-6 rounded-xl border-l-4 border-teal-500">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h4 class="text-lg font-semibold text-teal-700">Follow-ups</h4>
+                                <p class="text-teal-600 text-sm">Scheduled activities</p>
+                            </div>
+                            <div class="text-3xl font-bold text-teal-600">{{ total_followup }}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gradient-to-r from-orange-50 to-orange-100 p-6 rounded-xl border-l-4 border-orange-500">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h4 class="text-lg font-semibold text-orange-700">Evangelisms</h4>
+                                <p class="text-orange-600 text-sm">Gospel encounters</p>
+                            </div>
+                            <div class="text-3xl font-bold text-orange-600">{{ total_evangelism }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="bg-white p-8 rounded-xl shadow-lg">
+                <div class="text-center mb-6">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-2">🚀 Quick Actions</h3>
+                    <p class="text-gray-600">Manage your activities</p>
+                </div>
+                
+                <div class="space-y-4">
+                    <a href="{% url 'activity_calendar' %}" class="block">
+                        <div class="bg-gradient-to-r from-teal-500 to-orange-500 text-white p-6 rounded-xl hover:from-teal-600 hover:to-orange-600 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl">
+                            <div class="flex items-center">
+                                <div class="bg-white bg-opacity-20 p-3 rounded-full mr-4">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-lg">📅 Calendar View</h4>
+                                    <p class="text-sm opacity-90">See all your activities</p>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    
+                    <a href="{% url 'evangelism-listing' %}" class="block">
+                        <div class="bg-white border-2 border-gray-200 p-6 rounded-xl hover:border-teal-300 hover:bg-teal-50 transform hover:scale-105 transition-all duration-200 shadow-md hover:shadow-lg">
+                            <div class="flex items-center">
+                                <div class="bg-gradient-to-r from-teal-500 to-orange-500 text-white p-3 rounded-full mr-4">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-lg text-gray-800">📋 List View</h4>
+                                    <p class="text-sm text-gray-600">Browse all evangelisms</p>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
 {% endblock body %}

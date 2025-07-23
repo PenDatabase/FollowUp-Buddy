@@ -3,128 +3,218 @@
 
 {% block body %}
     <!-- Main Content -->
-    <main class="flex-grow container mx-auto py-8">
+    <main class="flex-grow container mx-auto py-8 px-4">
+        <!-- Header Section -->
+        <div class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">📅 Activity Calendar</h1>
+            <p class="text-lg text-gray-600">View your evangelism activities and follow-ups</p>
+        </div>
+
         <!-- Navigation Buttons -->
-        <div class="flex justify-between mb-6">
+        <div class="flex justify-between items-center mb-8 max-w-4xl mx-auto">
             <!-- Previous Month -->
             <a href="{% url 'activity_calendar' prev_year prev_month %}" 
-               class="px-4 py-2 bg-teal-500 text-white rounded hover:bg-teal-600">
+               class="px-6 py-3 bg-gradient-to-r from-gray-500 to-gray-600 text-white font-semibold rounded-xl hover:from-gray-600 hover:to-gray-700 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
                 Previous
             </a>
 
-            <h2 class="text-2xl font-bold text-teal-600">{{ month }} {{ year }} Calendar</h2>
+            <div class="text-center">
+                <h2 class="text-2xl md:text-3xl font-bold text-gray-800">{{ month }} {{ year }}</h2>
+                <p class="text-gray-600 text-sm">Click on any date to view activities</p>
+            </div>
 
             <!-- Next Month -->
             <a href="{% url 'activity_calendar' next_year next_month %}" 
-               class="px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600">
+               class="px-6 py-3 bg-gradient-to-r from-teal-500 to-orange-500 text-white font-semibold rounded-xl hover:from-teal-600 hover:to-orange-600 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center">
                 Next
+                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
             </a>
         </div>
 
         <!-- Calendar -->
-        <div class="bg-white p-6 rounded-lg shadow-lg">
+        <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg max-w-5xl mx-auto">
             <!-- Days of the Week -->
-            <div class="grid grid-cols-7 text-center text-gray-600 font-bold mb-4">
-                <span>Sun</span>
-                <span>Mon</span>
-                <span>Tue</span>
-                <span>Wed</span>
-                <span>Thu</span>
-                <span>Fri</span>
-                <span>Sat</span>
+            <div class="grid grid-cols-7 gap-2 mb-6">
+                <div class="text-center py-3 bg-gradient-to-r from-teal-50 to-orange-50 rounded-lg">
+                    <span class="text-sm font-bold text-gray-700">Sun</span>
+                </div>
+                <div class="text-center py-3 bg-gradient-to-r from-teal-50 to-orange-50 rounded-lg">
+                    <span class="text-sm font-bold text-gray-700">Mon</span>
+                </div>
+                <div class="text-center py-3 bg-gradient-to-r from-teal-50 to-orange-50 rounded-lg">
+                    <span class="text-sm font-bold text-gray-700">Tue</span>
+                </div>
+                <div class="text-center py-3 bg-gradient-to-r from-teal-50 to-orange-50 rounded-lg">
+                    <span class="text-sm font-bold text-gray-700">Wed</span>
+                </div>
+                <div class="text-center py-3 bg-gradient-to-r from-teal-50 to-orange-50 rounded-lg">
+                    <span class="text-sm font-bold text-gray-700">Thu</span>
+                </div>
+                <div class="text-center py-3 bg-gradient-to-r from-teal-50 to-orange-50 rounded-lg">
+                    <span class="text-sm font-bold text-gray-700">Fri</span>
+                </div>
+                <div class="text-center py-3 bg-gradient-to-r from-teal-50 to-orange-50 rounded-lg">
+                    <span class="text-sm font-bold text-gray-700">Sat</span>
+                </div>
             </div>
 
             <!-- Calendar Grid -->
             <div class="grid grid-cols-7 gap-2">
                 <!-- Placeholder for first day alignment -->
                 {% for _ in placeholders %}
-                <div></div>
+                    <div class="h-20 md:h-24"></div>
                 {% endfor %}
 
                 <!-- Calendar Days -->
                 {% for day in calendar_days %}
-                <div class="p-2 rounded-lg text-center border cursor-pointer 
-                    {% if day.has_activity %}bg-teal-100 hover:bg-teal-200{% else %}hover:bg-gray-100{% endif %} "
-                    onclick="openOffcanvas(`{{ day.date }}`)">
-                    <span class="{% if day.has_activity %}text-teal-700 font-bold{% else %}text-gray-700{% endif %}">
-                        {{ day.day }}
-                    </span>
-                </div>
+                    <div class="h-20 md:h-24 p-2 rounded-lg border-2 cursor-pointer transition-all duration-200 
+                        {% if day.has_activity %}
+                            bg-gradient-to-r from-teal-100 to-orange-100 border-teal-300 hover:from-teal-200 hover:to-orange-200 hover:border-teal-400 transform hover:scale-105 shadow-md
+                        {% else %}
+                            bg-gray-50 border-gray-200 hover:bg-gray-100 hover:border-gray-300
+                        {% endif %}"
+                        onclick="openOffcanvas(`{{ day.date }}`)">
+                        <div class="flex flex-col h-full">
+                            <span class="text-lg font-semibold 
+                                {% if day.has_activity %}text-teal-700{% else %}text-gray-700{% endif %}">
+                                {{ day.day }}
+                            </span>
+                            {% if day.has_activity %}
+                                <div class="flex-1 flex items-end justify-center">
+                                    <div class="w-2 h-2 bg-gradient-to-r from-teal-500 to-orange-500 rounded-full animate-pulse"></div>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
                 {% endfor %}
+            </div>
+
+            <!-- Legend -->
+            <div class="mt-6 flex justify-center space-x-6 text-sm">
+                <div class="flex items-center">
+                    <div class="w-4 h-4 bg-gradient-to-r from-teal-100 to-orange-100 border border-teal-300 rounded mr-2"></div>
+                    <span class="text-gray-600">Has activities</span>
+                </div>
+                <div class="flex items-center">
+                    <div class="w-4 h-4 bg-gray-50 border border-gray-200 rounded mr-2"></div>
+                    <span class="text-gray-600">No activities</span>
+                </div>
             </div>
         </div>
     </main>
 
     <!-- Offcanvas Overlay -->
-    <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 hidden transition-opacity"></div>
+    <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 hidden transition-opacity z-40"></div>
 
     <!-- Offcanvas Panel -->
-    <div id="offcanvas" class="fixed top-0 right-0 w-96 md:w-[40rem] h-full bg-white shadow-lg transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col z-50">
+    <div id="offcanvas" class="fixed top-0 right-0 w-96 md:w-[40rem] h-full bg-white shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col z-50">
         <!-- Header (Fixed) -->
-        <div class="bg-gradient-to-r from-teal-500 to-orange-500 text-white p-4 flex justify-between items-center">
-            <h2 class="text-xl font-semibold">Activities</h2>
-            <button onclick="closeOffcanvas()" class="text-white bg-black rounded-lg text-2xl pb-1 px-2 font-bold">&times;</button>
+        <div class="bg-gradient-to-r from-teal-500 to-orange-500 text-white p-6 flex justify-between items-center">
+            <div>
+                <h2 class="text-2xl font-bold">📅 Activities</h2>
+                <p class="text-sm opacity-90">Selected Date: <span id="selected-date" class="font-semibold"></span></p>
+            </div>
+            <button onclick="closeOffcanvas()" class="text-white bg-black bg-opacity-20 hover:bg-opacity-30 rounded-lg text-2xl p-2 font-bold transition-all duration-200">
+                &times;
+            </button>
         </div>
 
         <!-- Scrollable Content -->
-        <div class="p-4 overflow-y-auto flex-1">
-            <h3 class="text-lg font-bold text-gray-800">Selected Date: 
-                <span id="selected-date" class="font-normal"></span>
-            </h3>
-            <div id="evangelism-list" class="mt-4 space-y-4"></div>
+        <div class="p-6 overflow-y-auto flex-1">
+            <div id="evangelism-list" class="space-y-6"></div>
         </div>
     </div>
 
     <script>
         function openOffcanvas(date) {
-            console.log("Selected Date:", date); // Debugging
+            console.log("Selected Date:", date);
             document.getElementById('selected-date').innerText = date;
 
             fetch(`${window.location.origin}/activities?date=${date}`)
                 .then(response => response.json())
                 .then(data => {
-                    console.log("Fetched Data:", data); // Debugging
+                    console.log("Fetched Data:", data);
 
                     let list = document.getElementById('evangelism-list');
                     list.innerHTML = '';
 
                     if (!data.evangelisms?.length && !data.followups?.length) {
-                        list.innerHTML = '<p class="text-gray-500">No activities for this date.</p>';
+                        list.innerHTML = `
+                            <div class="text-center py-8">
+                                <div class="bg-gradient-to-r from-gray-100 to-gray-200 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <span class="text-2xl">📅</span>
+                                </div>
+                                <h3 class="text-lg font-semibold text-gray-800 mb-2">No Activities</h3>
+                                <p class="text-gray-600">No activities scheduled for this date.</p>
+                            </div>`;
                         return;
                     }
 
-                    // Display Evangelisms with "View More Details" button
+                    // Display Evangelisms
                     if (data.evangelisms.length > 0) {
-                        list.innerHTML += '<h3 class="text-xl font-bold text-teal-600 mt-4">Evangelism Records</h3>';
+                        list.innerHTML += `
+                            <div class="mb-6">
+                                <div class="flex items-center mb-4">
+                                    <span class="text-orange-600 mr-2 text-xl">🚀</span>
+                                    <h3 class="text-xl font-bold text-gray-800">Evangelism Records</h3>
+                                    <span class="ml-2 bg-orange-100 text-orange-800 px-2 py-1 rounded-full text-xs font-medium">${data.evangelisms.length}</span>
+                                </div>`;
+                        
                         data.evangelisms.forEach(evangelism => {
                             list.innerHTML += `
-                                <div class="p-3 border border-gray-300 rounded-lg shadow-sm">
-                                    <p class="text-gray-800"><strong>Person Name:</strong> ${evangelism.person_name}</p>
-                                    <p class="text-gray-800"><strong>Faith Status:</strong> ${evangelism.faith}</p>
+                                <div class="bg-gradient-to-r from-orange-50 to-red-50 p-4 rounded-xl border-l-4 border-orange-400 mb-3 hover:shadow-md transition-all duration-200">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <h4 class="font-semibold text-gray-800">${evangelism.person_name}</h4>
+                                        ${evangelism.completed ? '<span class="text-green-600 text-sm">✅ Completed</span>' : '<span class="text-yellow-600 text-sm">⏳ Ongoing</span>'}
+                                    </div>
+                                    <p class="text-gray-600 text-sm mb-3"><strong>Faith Background:</strong> ${evangelism.faith}</p>
                                     <a href="${evangelism.detail_link}" 
-                                        class="mt-2 inline-block px-3 py-1.5 bg-orange-500 text-white text-sm font-medium rounded-md shadow-md hover:bg-orange-400 active:bg-teal-700 transition duration-300">
-                                        View More Details
+                                        class="inline-block px-4 py-2 bg-gradient-to-r from-orange-500 to-red-500 text-white text-sm font-semibold rounded-lg hover:from-orange-600 hover:to-red-600 transform hover:scale-105 transition-all duration-200 shadow-md hover:shadow-lg">
+                                        View Details →
                                     </a>
-
                                 </div>`;
                         });
-                        list.innerHTML += '<br>'
+                        list.innerHTML += '</div>';
                     }
 
                     // Display Follow-ups
                     if (data.followups.length > 0) {
-                        list.innerHTML += '<h3 class="text-xl font-bold text-orange-600 mt-4">Follow-ups</h3>';
+                        list.innerHTML += `
+                            <div>
+                                <div class="flex items-center mb-4">
+                                    <span class="text-teal-600 mr-2 text-xl">📝</span>
+                                    <h3 class="text-xl font-bold text-gray-800">Follow-ups</h3>
+                                    <span class="ml-2 bg-teal-100 text-teal-800 px-2 py-1 rounded-full text-xs font-medium">${data.followups.length}</span>
+                                </div>`;
+                        
                         data.followups.forEach(followup => {
                             list.innerHTML += `
-                                <div class="p-3 border border-gray-300 rounded-lg shadow-sm">
-                                    <p class="text-gray-800"><strong>Person:</strong> ${followup.evangelism__person_name}</p>
-                                    <p class="text-gray-600"><strong>Description:</strong> ${followup.description || 'No details provided'}</p>
+                                <div class="bg-gradient-to-r from-teal-50 to-blue-50 p-4 rounded-xl border-l-4 border-teal-400 mb-3 hover:shadow-md transition-all duration-200">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <h4 class="font-semibold text-gray-800">${followup.evangelism__person_name}</h4>
+                                        ${followup.completed ? '<span class="text-green-600 text-sm">✅ Completed</span>' : '<span class="text-blue-600 text-sm">📅 Scheduled</span>'}
+                                    </div>
+                                    <p class="text-gray-600 text-sm">${followup.description || 'No description provided'}</p>
                                 </div>`;
                         });
+                        list.innerHTML += '</div>';
                     }
                 })
                 .catch(error => {
                     console.error("Error fetching activities:", error);
+                    document.getElementById('evangelism-list').innerHTML = `
+                        <div class="text-center py-8">
+                            <div class="bg-red-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <span class="text-2xl">❌</span>
+                            </div>
+                            <h3 class="text-lg font-semibold text-gray-800 mb-2">Error Loading</h3>
+                            <p class="text-gray-600">Failed to load activities for this date.</p>
+                        </div>`;
                 });
 
             // Show Offcanvas & Overlay
@@ -136,8 +226,8 @@
             document.getElementById('offcanvas').classList.add('translate-x-full');
             document.getElementById('overlay').classList.add('hidden');
         }
+
+        // Close offcanvas when clicking overlay
+        document.getElementById('overlay').addEventListener('click', closeOffcanvas);
     </script>
-
-    
-
 {% endblock body %}

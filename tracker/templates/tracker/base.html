@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
-    <!-- Custom CSS for footer positioning -->
+    <!-- Custom CSS for footer positioning and mobile menu -->
     <style>
         html, body {
             height: 100%; /* Make sure the body and html elements take full height */
@@ -41,6 +41,44 @@
         #footer {
             z-index: 10; /* Ensure it's below the offcanvas */
         }
+
+        /* Mobile menu styles */
+        .mobile-menu {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+        }
+        
+        .mobile-menu.open {
+            transform: translateX(0);
+        }
+
+        .mobile-menu-overlay {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+        }
+        
+        .mobile-menu-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Hamburger menu animation */
+        .hamburger-line {
+            transition: all 0.3s ease;
+        }
+        
+        .hamburger-active .hamburger-line:nth-child(1) {
+            transform: rotate(45deg) translate(6px, 6px);
+        }
+        
+        .hamburger-active .hamburger-line:nth-child(2) {
+            opacity: 0;
+        }
+        
+        .hamburger-active .hamburger-line:nth-child(3) {
+            transform: rotate(-45deg) translate(6px, -6px);
+        }
     </style>
 </head>
 <body class="bg-gradient-to-br from-gray-100 via-teal-50 to-orange-50 text-gray-800 font-sans">
@@ -48,38 +86,112 @@
         <!-- Header -->
        {% if not exclude_header|default:False %}
             <header class="bg-gradient-to-r from-teal-500 to-orange-500 text-white py-4 shadow-md">
-                <div class="container mx-auto flex justify-between items-center">
-                    <h1 class="text-3xl font-bold">
+                <div class="container mx-auto px-4 flex justify-between items-center">
+                    <h1 class="text-2xl md:text-3xl font-bold">
                         <a href="{% url 'home' %}">Follow Up Buddy</a>
                     </h1>
-                    <nav class="flex space-x-4">
-                        <a href="{% url 'add-followup' %}" class="px-4 py-2 bg-white text-gray-800 font-medium rounded-lg shadow-md hover:bg-gray-200 transition duration-300">
-                            Add Follow-Up
+                    
+                    <!-- Desktop Navigation -->
+                    <nav class="hidden lg:flex items-center space-x-4">
+                        {% if user.is_authenticated %}
+                            <div class="flex items-center mr-4 px-3 py-2 bg-white bg-opacity-20 rounded-lg">
+                                <img src="https://ui-avatars.com/api/?name={{ user.username }}&background=ffffff&color=0891b2&size=32&rounded=true" 
+                                     alt="{{ user.username }}" 
+                                     class="w-8 h-8 rounded-full mr-2 shadow-sm">
+                                <span class="font-medium text-white">{{ user.username }}</span>
+                            </div>
+                        {% endif %}
+                        
+                        <a href="{% url 'add-followup' %}" class="px-3 py-2 md:px-4 md:py-2 bg-white text-gray-800 font-medium rounded-lg shadow-md hover:bg-gray-200 transition duration-300 text-sm md:text-base">
+                            ➕ Follow-Up
                         </a>
-                        <a href="{% url 'add-evangelism' %}" class="px-4 py-2 bg-white text-gray-800 font-medium rounded-lg shadow-md hover:bg-gray-200 transition duration-300">
-                            Add Evangelism
+                        <a href="{% url 'add-evangelism' %}" class="px-3 py-2 md:px-4 md:py-2 bg-white text-gray-800 font-medium rounded-lg shadow-md hover:bg-gray-200 transition duration-300 text-sm md:text-base">
+                            ➕ Evangelism
                         </a>
                     
                         {% if not user.is_authenticated %}
-                            <a href="{% url 'login' %}" class="px-4 py-2 bg-gray-900 text-white font-medium rounded-lg shadow-md hover:bg-gray-700 transition duration-300">
+                            <a href="{% url 'login' %}" class="px-3 py-2 md:px-4 md:py-2 bg-gray-900 text-white font-medium rounded-lg shadow-md hover:bg-gray-700 transition duration-300 text-sm md:text-base">
                                 Login
                             </a>
-                            <a href="{% url 'signup' %}" class="px-4 py-2 bg-gray-500 text-white font-medium rounded-lg shadow-md hover:bg-orange-600 transition duration-300">
+                            <a href="{% url 'signup' %}" class="px-3 py-2 md:px-4 md:py-2 bg-gray-500 text-white font-medium rounded-lg shadow-md hover:bg-orange-600 transition duration-300 text-sm md:text-base">
                                 Sign Up
                             </a>
                         {% else %}
-                            <form action="{% url 'logout' %}" method="post">
+                            <form action="{% url 'logout' %}" method="post" class="inline">
                                 {% csrf_token %}
-                                <button type="submit" class="px-4 py-2 bg-black text-white font-medium rounded-lg shadow-md hover:bg-red-100 transition duration-300">
+                                <button type="submit" class="px-3 py-2 md:px-4 md:py-2 bg-black text-white font-medium rounded-lg shadow-md hover:bg-red-600 transition duration-300 text-sm md:text-base">
                                     Log Out
                                 </button>
                             </form>
                         {% endif %}
                     </nav>
                     
-                    
+                    <!-- Mobile menu button -->
+                    <button id="mobile-menu-button" class="lg:hidden flex flex-col justify-center items-center w-8 h-8 space-y-1">
+                        <span class="hamburger-line w-6 h-0.5 bg-white block"></span>
+                        <span class="hamburger-line w-6 h-0.5 bg-white block"></span>
+                        <span class="hamburger-line w-6 h-0.5 bg-white block"></span>
+                    </button>
                 </div>
             </header>
+
+            <!-- Mobile Menu Overlay -->
+            <div id="mobile-menu-overlay" class="mobile-menu-overlay fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"></div>
+            
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="mobile-menu fixed top-0 left-0 h-full w-64 bg-white shadow-lg z-50 lg:hidden">
+                <div class="p-6">
+                    <div class="flex justify-between items-center mb-8">
+                        <h2 class="text-xl font-bold text-gray-800">Menu</h2>
+                        <button id="mobile-menu-close" class="text-gray-600 hover:text-gray-800">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    
+                    <nav class="space-y-4">
+                        {% if user.is_authenticated %}
+                            <div class="border-b pb-4 mb-4">
+                                <div class="flex items-center px-4 py-3">
+                                    <img src="https://ui-avatars.com/api/?name={{ user.username }}&background=0891b2&color=fff&size=40&rounded=true" 
+                                         alt="{{ user.username }}" 
+                                         class="w-10 h-10 rounded-full mr-3 shadow-md">
+                                    <span class="font-medium text-gray-800">{{ user.username }}</span>
+                                </div>
+                            </div>
+                        {% endif %}
+                        
+                        <a href="{% url 'home' %}" class="block px-4 py-3 text-gray-800 font-medium rounded-lg hover:bg-gray-100 transition duration-300">
+                            🏠 Home
+                        </a>
+                        <a href="{% url 'add-followup' %}" class="block px-4 py-3 text-gray-800 font-medium rounded-lg hover:bg-gray-100 transition duration-300">
+                            ➕ Follow-Up
+                        </a>
+                        <a href="{% url 'add-evangelism' %}" class="block px-4 py-3 text-gray-800 font-medium rounded-lg hover:bg-gray-100 transition duration-300">
+                            ➕ Evangelism
+                        </a>
+                        
+                        {% if not user.is_authenticated %}
+                            <a href="{% url 'login' %}" class="block px-4 py-3 bg-gray-900 text-white font-medium rounded-lg hover:bg-gray-700 transition duration-300">
+                                Login
+                            </a>
+                            <a href="{% url 'signup' %}" class="block px-4 py-3 bg-gray-500 text-white font-medium rounded-lg hover:bg-orange-600 transition duration-300">
+                                Sign Up
+                            </a>
+                        {% else %}
+                            <div class="border-t pt-4">
+                                <form action="{% url 'logout' %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="px-6 py-3 bg-black text-white font-medium rounded-lg hover:bg-red-700 transition duration-300">
+                                        Log Out
+                                    </button>
+                                </form>
+                            </div>
+                        {% endif %}
+                    </nav>
+                </div>
+            </div>
     
         {% endif %}
 
@@ -88,8 +200,8 @@
     </div>
 
     <!-- Footer -->
-    <footer id="footer">
-        <p>&copy; 2025 Follow Up Buddy. Made with care to support meaningful connections.</p>
+    <footer id="footer" class="px-4">
+        <p class="text-sm md:text-base">&copy; 2025 Follow Up Buddy. Made with care to help users track and review thier Evangelisms and FollowUps</p>
     </footer>
 
     <!-- Initialize flatpickr -->
@@ -99,6 +211,67 @@
             altInput: true, // Use an alternative input field for better UX
             altFormat: "F j, Y", // Display date in a human-readable format
             theme: "material_blue" // Optional: You can change the calendar theme
+        });
+
+        // Mobile menu functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
+            const mobileMenuClose = document.getElementById('mobile-menu-close');
+
+            function openMobileMenu() {
+                mobileMenu.classList.add('open');
+                mobileMenuOverlay.classList.add('open');
+                mobileMenuButton.classList.add('hamburger-active');
+                document.body.style.overflow = 'hidden'; // Prevent body scroll
+            }
+
+            function closeMobileMenu() {
+                mobileMenu.classList.remove('open');
+                mobileMenuOverlay.classList.remove('open');
+                mobileMenuButton.classList.remove('hamburger-active');
+                document.body.style.overflow = ''; // Restore body scroll
+            }
+
+            // Event listeners
+            if (mobileMenuButton) {
+                mobileMenuButton.addEventListener('click', function() {
+                    if (mobileMenu.classList.contains('open')) {
+                        closeMobileMenu();
+                    } else {
+                        openMobileMenu();
+                    }
+                });
+            }
+
+            if (mobileMenuClose) {
+                mobileMenuClose.addEventListener('click', closeMobileMenu);
+            }
+
+            if (mobileMenuOverlay) {
+                mobileMenuOverlay.addEventListener('click', closeMobileMenu);
+            }
+
+            // Close menu when clicking on menu links
+            const mobileMenuLinks = mobileMenu.querySelectorAll('a');
+            mobileMenuLinks.forEach(link => {
+                link.addEventListener('click', closeMobileMenu);
+            });
+
+            // Close menu on escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && mobileMenu.classList.contains('open')) {
+                    closeMobileMenu();
+                }
+            });
+
+            // Close menu on window resize if open
+            window.addEventListener('resize', function() {
+                if (window.innerWidth >= 1024 && mobileMenu.classList.contains('open')) {
+                    closeMobileMenu();
+                }
+            });
         });
     </script>
 </body>
