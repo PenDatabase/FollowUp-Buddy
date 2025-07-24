@@ -79,6 +79,69 @@
         .hamburger-active .hamburger-line:nth-child(3) {
             transform: rotate(-45deg) translate(6px, -6px);
         }
+
+        /* Mobile-first responsive improvements */
+        @media (max-width: 768px) {
+            /* Improve touch targets */
+            button, a {
+                min-height: 44px;
+                min-width: 44px;
+            }
+            
+            /* Better tap highlighting */
+            * {
+                -webkit-tap-highlight-color: rgba(20, 184, 166, 0.2);
+            }
+            
+            /* Smooth scrolling on mobile */
+            html {
+                scroll-behavior: smooth;
+                -webkit-overflow-scrolling: touch;
+            }
+        }
+
+        /* Extra small screens (phones < 475px) */
+        @media (max-width: 475px) {
+            .xs\:hidden {
+                display: none !important;
+            }
+        }
+
+        @media (min-width: 476px) {
+            .xs\:inline {
+                display: inline !important;
+            }
+        }
+
+        /* Calendar specific mobile improvements */
+        @media (max-width: 640px) {
+            .calendar-day {
+                touch-action: manipulation;
+            }
+            
+            /* Reduce container padding on very small screens */
+            .container {
+                padding-left: 0.5rem;
+                padding-right: 0.5rem;
+            }
+        }
+
+        /* Extra small devices (phones in portrait) */
+        @media (max-width: 360px) {
+            .container {
+                padding-left: 0.25rem;
+                padding-right: 0.25rem;
+            }
+            
+            /* Further reduce text sizes on very small screens */
+            h1 {
+                font-size: 1.25rem !important;
+            }
+            
+            h2 {
+                font-size: 1.125rem !important;
+            }
+        }
     </style>
 </head>
 <body class="bg-gradient-to-br from-gray-100 via-teal-50 to-orange-50 text-gray-800 font-sans">

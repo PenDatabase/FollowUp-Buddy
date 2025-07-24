@@ -3,90 +3,125 @@
 
 {% block body %}
     <!-- Main Content -->
-    <main class="flex-grow container mx-auto py-8 px-4">
+    <main class="flex-grow container mx-auto py-4 sm:py-8 px-2 sm:px-4">
         <!-- Header Section -->
-        <div class="text-center mb-8">
-            <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">📅 Activity Calendar</h1>
-            <p class="text-lg text-gray-600">View your evangelism activities and follow-ups</p>
+        <div class="text-center mb-6 sm:mb-8">
+            <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-2 sm:mb-4">📅 Activity Calendar</h1>
+            <p class="text-base sm:text-lg text-gray-600">View your evangelism activities and follow-ups</p>
         </div>
 
         <!-- Navigation Buttons -->
-        <div class="flex justify-between items-center mb-8 max-w-4xl mx-auto">
-            <!-- Previous Month -->
-            <a href="{% url 'activity_calendar' prev_year prev_month %}" 
-               class="px-6 py-3 bg-gradient-to-r from-gray-500 to-gray-600 text-white font-semibold rounded-xl hover:from-gray-600 hover:to-gray-700 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-                </svg>
-                Previous
-            </a>
-
-            <div class="text-center">
-                <h2 class="text-2xl md:text-3xl font-bold text-gray-800">{{ month }} {{ year }}</h2>
-                <p class="text-gray-600 text-sm">Click on any date to view activities</p>
+        <div class="mb-4 sm:mb-6 md:mb-8 max-w-4xl mx-auto px-2 sm:px-0">
+            <!-- Mobile Layout (Stack vertically) -->
+            <div class="block md:hidden space-y-3">
+                <div class="text-center">
+                    <h2 class="text-xl font-bold text-gray-800">{{ month }} {{ year }}</h2>
+                    <p class="text-gray-600 text-xs">Tap on any date to view activities</p>
+                </div>
+                <div class="flex justify-center items-center gap-6">
+                    <!-- Previous Month -->
+                    <a href="{% url 'activity_calendar' prev_year prev_month %}" 
+                       class="w-12 h-12 bg-gradient-to-r from-gray-500 to-gray-600 text-white rounded-full hover:from-gray-600 hover:to-gray-700 active:scale-95 transition-all duration-200 shadow-md flex items-center justify-center"
+                       title="Previous Month">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                        </svg>
+                    </a>
+                    
+                    <!-- Swipe Hint -->
+                    <div class="text-center px-2">
+                        <p class="text-xs text-gray-500 italic">Swipe to navigate</p>
+                    </div>
+                    
+                    <!-- Next Month -->
+                    <a href="{% url 'activity_calendar' next_year next_month %}" 
+                       class="w-12 h-12 bg-gradient-to-r from-teal-500 to-orange-500 text-white rounded-full hover:from-teal-600 hover:to-orange-600 active:scale-95 transition-all duration-200 shadow-md flex items-center justify-center"
+                       title="Next Month">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </a>
+                </div>
             </div>
 
-            <!-- Next Month -->
-            <a href="{% url 'activity_calendar' next_year next_month %}" 
-               class="px-6 py-3 bg-gradient-to-r from-teal-500 to-orange-500 text-white font-semibold rounded-xl hover:from-teal-600 hover:to-orange-600 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center">
-                Next
-                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                </svg>
-            </a>
+            <!-- Desktop Layout (Horizontal) -->
+            <div class="hidden md:flex justify-between items-center">
+                <!-- Previous Month -->
+                <a href="{% url 'activity_calendar' prev_year prev_month %}" 
+                   class="px-6 py-3 bg-gradient-to-r from-gray-500 to-gray-600 text-white font-semibold rounded-xl hover:from-gray-600 hover:to-gray-700 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                    Previous
+                </a>
+
+                <div class="text-center">
+                    <h2 class="text-2xl md:text-3xl font-bold text-gray-800">{{ month }} {{ year }}</h2>
+                    <p class="text-gray-600 text-sm">Click on any date to view activities</p>
+                </div>
+
+                <!-- Next Month -->
+                <a href="{% url 'activity_calendar' next_year next_month %}" 
+                   class="px-6 py-3 bg-gradient-to-r from-teal-500 to-orange-500 text-white font-semibold rounded-xl hover:from-teal-600 hover:to-orange-600 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center">
+                    Next
+                    <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </a>
+            </div>
         </div>
 
         <!-- Calendar -->
-        <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg max-w-5xl mx-auto">
+        <div class="bg-white p-3 sm:p-6 md:p-8 rounded-xl shadow-lg max-w-5xl mx-auto">
             <!-- Days of the Week -->
-            <div class="grid grid-cols-7 gap-2 mb-6">
-                <div class="text-center py-3 bg-gradient-to-r from-teal-50 to-orange-50 rounded-lg">
-                    <span class="text-sm font-bold text-gray-700">Sun</span>
+            <div class="grid grid-cols-7 gap-1 sm:gap-2 mb-4 md:mb-6">
+                <div class="text-center py-2 sm:py-3 bg-gradient-to-r from-teal-50 to-orange-50 rounded-lg">
+                    <span class="text-xs sm:text-sm font-bold text-gray-700">Sun</span>
                 </div>
-                <div class="text-center py-3 bg-gradient-to-r from-teal-50 to-orange-50 rounded-lg">
-                    <span class="text-sm font-bold text-gray-700">Mon</span>
+                <div class="text-center py-2 sm:py-3 bg-gradient-to-r from-teal-50 to-orange-50 rounded-lg">
+                    <span class="text-xs sm:text-sm font-bold text-gray-700">Mon</span>
                 </div>
-                <div class="text-center py-3 bg-gradient-to-r from-teal-50 to-orange-50 rounded-lg">
-                    <span class="text-sm font-bold text-gray-700">Tue</span>
+                <div class="text-center py-2 sm:py-3 bg-gradient-to-r from-teal-50 to-orange-50 rounded-lg">
+                    <span class="text-xs sm:text-sm font-bold text-gray-700">Tue</span>
                 </div>
-                <div class="text-center py-3 bg-gradient-to-r from-teal-50 to-orange-50 rounded-lg">
-                    <span class="text-sm font-bold text-gray-700">Wed</span>
+                <div class="text-center py-2 sm:py-3 bg-gradient-to-r from-teal-50 to-orange-50 rounded-lg">
+                    <span class="text-xs sm:text-sm font-bold text-gray-700">Wed</span>
                 </div>
-                <div class="text-center py-3 bg-gradient-to-r from-teal-50 to-orange-50 rounded-lg">
-                    <span class="text-sm font-bold text-gray-700">Thu</span>
+                <div class="text-center py-2 sm:py-3 bg-gradient-to-r from-teal-50 to-orange-50 rounded-lg">
+                    <span class="text-xs sm:text-sm font-bold text-gray-700">Thu</span>
                 </div>
-                <div class="text-center py-3 bg-gradient-to-r from-teal-50 to-orange-50 rounded-lg">
-                    <span class="text-sm font-bold text-gray-700">Fri</span>
+                <div class="text-center py-2 sm:py-3 bg-gradient-to-r from-teal-50 to-orange-50 rounded-lg">
+                    <span class="text-xs sm:text-sm font-bold text-gray-700">Fri</span>
                 </div>
-                <div class="text-center py-3 bg-gradient-to-r from-teal-50 to-orange-50 rounded-lg">
-                    <span class="text-sm font-bold text-gray-700">Sat</span>
+                <div class="text-center py-2 sm:py-3 bg-gradient-to-r from-teal-50 to-orange-50 rounded-lg">
+                    <span class="text-xs sm:text-sm font-bold text-gray-700">Sat</span>
                 </div>
             </div>
 
             <!-- Calendar Grid -->
-            <div class="grid grid-cols-7 gap-2">
+            <div class="grid grid-cols-7 gap-1 sm:gap-2">
                 <!-- Placeholder for first day alignment -->
                 {% for _ in placeholders %}
-                    <div class="h-20 md:h-24"></div>
+                    <div class="h-14 sm:h-16 md:h-20 lg:h-24"></div>
                 {% endfor %}
 
                 <!-- Calendar Days -->
                 {% for day in calendar_days %}
-                    <div class="h-20 md:h-24 p-2 rounded-lg border-2 cursor-pointer transition-all duration-200 
+                    <div class="h-14 sm:h-16 md:h-20 lg:h-24 p-1 sm:p-2 rounded-lg border-2 cursor-pointer transition-all duration-200 
                         {% if day.has_activity %}
-                            bg-gradient-to-r from-teal-100 to-orange-100 border-teal-300 hover:from-teal-200 hover:to-orange-200 hover:border-teal-400 transform hover:scale-105 shadow-md
+                            bg-gradient-to-r from-teal-100 to-orange-100 border-teal-300 hover:from-teal-200 hover:to-orange-200 hover:border-teal-400 active:scale-95 sm:hover:scale-105 shadow-md
                         {% else %}
-                            bg-gray-50 border-gray-200 hover:bg-gray-100 hover:border-gray-300
+                            bg-gray-50 border-gray-200 hover:bg-gray-100 hover:border-gray-300 active:scale-95
                         {% endif %}"
                         onclick="openOffcanvas(`{{ day.date }}`)">
-                        <div class="flex flex-col h-full">
-                            <span class="text-lg font-semibold 
+                        <div class="flex flex-col h-full justify-between">
+                            <span class="text-xs sm:text-sm md:text-base lg:text-lg font-semibold 
                                 {% if day.has_activity %}text-teal-700{% else %}text-gray-700{% endif %}">
                                 {{ day.day }}
                             </span>
                             {% if day.has_activity %}
-                                <div class="flex-1 flex items-end justify-center">
-                                    <div class="w-2 h-2 bg-gradient-to-r from-teal-500 to-orange-500 rounded-full animate-pulse"></div>
+                                <div class="flex items-end justify-center">
+                                    <div class="w-1 h-1 sm:w-1.5 sm:h-1.5 md:w-2 md:h-2 bg-gradient-to-r from-teal-500 to-orange-500 rounded-full animate-pulse"></div>
                                 </div>
                             {% endif %}
                         </div>
@@ -95,13 +130,13 @@
             </div>
 
             <!-- Legend -->
-            <div class="mt-6 flex justify-center space-x-6 text-sm">
+            <div class="mt-4 sm:mt-6 flex flex-col sm:flex-row justify-center items-center sm:space-x-6 space-y-2 sm:space-y-0 text-xs sm:text-sm">
                 <div class="flex items-center">
-                    <div class="w-4 h-4 bg-gradient-to-r from-teal-100 to-orange-100 border border-teal-300 rounded mr-2"></div>
+                    <div class="w-3 h-3 sm:w-4 sm:h-4 bg-gradient-to-r from-teal-100 to-orange-100 border border-teal-300 rounded mr-2"></div>
                     <span class="text-gray-600">Has activities</span>
                 </div>
                 <div class="flex items-center">
-                    <div class="w-4 h-4 bg-gray-50 border border-gray-200 rounded mr-2"></div>
+                    <div class="w-3 h-3 sm:w-4 sm:h-4 bg-gray-50 border border-gray-200 rounded mr-2"></div>
                     <span class="text-gray-600">No activities</span>
                 </div>
             </div>
@@ -112,21 +147,21 @@
     <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 hidden transition-opacity z-40"></div>
 
     <!-- Offcanvas Panel -->
-    <div id="offcanvas" class="fixed top-0 right-0 w-96 md:w-[40rem] h-full bg-white shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col z-50">
+    <div id="offcanvas" class="fixed top-0 right-0 w-full sm:w-96 md:w-[40rem] h-full bg-white shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col z-50">
         <!-- Header (Fixed) -->
-        <div class="bg-gradient-to-r from-teal-500 to-orange-500 text-white p-6 flex justify-between items-center">
+        <div class="bg-gradient-to-r from-teal-500 to-orange-500 text-white p-4 sm:p-6 flex justify-between items-center">
             <div>
-                <h2 class="text-2xl font-bold">📅 Activities</h2>
-                <p class="text-sm opacity-90">Selected Date: <span id="selected-date" class="font-semibold"></span></p>
+                <h2 class="text-xl sm:text-2xl font-bold">📅 Activities</h2>
+                <p class="text-xs sm:text-sm opacity-90">Selected Date: <span id="selected-date" class="font-semibold"></span></p>
             </div>
-            <button onclick="closeOffcanvas()" class="text-white bg-black bg-opacity-20 hover:bg-opacity-30 rounded-lg text-2xl p-2 font-bold transition-all duration-200">
+            <button onclick="closeOffcanvas()" class="text-white bg-black bg-opacity-20 hover:bg-opacity-30 rounded-lg text-xl sm:text-2xl p-2 font-bold transition-all duration-200 min-w-[40px] min-h-[40px] flex items-center justify-center">
                 &times;
             </button>
         </div>
 
         <!-- Scrollable Content -->
-        <div class="p-6 overflow-y-auto flex-1">
-            <div id="evangelism-list" class="space-y-6"></div>
+        <div class="p-4 sm:p-6 overflow-y-auto flex-1">
+            <div id="evangelism-list" class="space-y-4 sm:space-y-6"></div>
         </div>
     </div>
 
@@ -146,11 +181,11 @@
                     if (!data.evangelisms?.length && !data.followups?.length) {
                         list.innerHTML = `
                             <div class="text-center py-8">
-                                <div class="bg-gradient-to-r from-gray-100 to-gray-200 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                                    <span class="text-2xl">📅</span>
+                                <div class="bg-gradient-to-r from-gray-100 to-gray-200 w-12 h-12 sm:w-16 sm:h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <span class="text-xl sm:text-2xl">📅</span>
                                 </div>
-                                <h3 class="text-lg font-semibold text-gray-800 mb-2">No Activities</h3>
-                                <p class="text-gray-600">No activities scheduled for this date.</p>
+                                <h3 class="text-base sm:text-lg font-semibold text-gray-800 mb-2">No Activities</h3>
+                                <p class="text-sm sm:text-base text-gray-600">No activities scheduled for this date.</p>
                             </div>`;
                         return;
                     }
@@ -158,23 +193,23 @@
                     // Display Evangelisms
                     if (data.evangelisms.length > 0) {
                         list.innerHTML += `
-                            <div class="mb-6">
-                                <div class="flex items-center mb-4">
-                                    <span class="text-orange-600 mr-2 text-xl">🚀</span>
-                                    <h3 class="text-xl font-bold text-gray-800">Evangelism Records</h3>
+                            <div class="mb-4 sm:mb-6">
+                                <div class="flex items-center mb-3 sm:mb-4">
+                                    <span class="text-orange-600 mr-2 text-lg sm:text-xl">🚀</span>
+                                    <h3 class="text-lg sm:text-xl font-bold text-gray-800">Evangelism Records</h3>
                                     <span class="ml-2 bg-orange-100 text-orange-800 px-2 py-1 rounded-full text-xs font-medium">${data.evangelisms.length}</span>
                                 </div>`;
                         
                         data.evangelisms.forEach(evangelism => {
                             list.innerHTML += `
-                                <div class="bg-gradient-to-r from-orange-50 to-red-50 p-4 rounded-xl border-l-4 border-orange-400 mb-3 hover:shadow-md transition-all duration-200">
-                                    <div class="flex items-center justify-between mb-2">
-                                        <h4 class="font-semibold text-gray-800">${evangelism.person_name}</h4>
-                                        ${evangelism.completed ? '<span class="text-green-600 text-sm">✅ Completed</span>' : '<span class="text-yellow-600 text-sm">⏳ Ongoing</span>'}
+                                <div class="bg-gradient-to-r from-orange-50 to-red-50 p-3 sm:p-4 rounded-xl border-l-4 border-orange-400 mb-3 hover:shadow-md transition-all duration-200">
+                                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
+                                        <h4 class="font-semibold text-gray-800 text-sm sm:text-base">${evangelism.person_name}</h4>
+                                        ${evangelism.completed ? '<span class="text-green-600 text-xs sm:text-sm mt-1 sm:mt-0">✅ Completed</span>' : '<span class="text-yellow-600 text-xs sm:text-sm mt-1 sm:mt-0">⏳ Ongoing</span>'}
                                     </div>
-                                    <p class="text-gray-600 text-sm mb-3"><strong>Faith Background:</strong> ${evangelism.faith}</p>
+                                    <p class="text-gray-600 text-xs sm:text-sm mb-3"><strong>Faith Background:</strong> ${evangelism.faith}</p>
                                     <a href="${evangelism.detail_link}" 
-                                        class="inline-block px-4 py-2 bg-gradient-to-r from-orange-500 to-red-500 text-white text-sm font-semibold rounded-lg hover:from-orange-600 hover:to-red-600 transform hover:scale-105 transition-all duration-200 shadow-md hover:shadow-lg">
+                                        class="inline-block px-3 sm:px-4 py-2 bg-gradient-to-r from-orange-500 to-red-500 text-white text-xs sm:text-sm font-semibold rounded-lg hover:from-orange-600 hover:to-red-600 active:scale-95 sm:hover:scale-105 transition-all duration-200 shadow-md hover:shadow-lg">
                                         View Details →
                                     </a>
                                 </div>`;
@@ -186,20 +221,20 @@
                     if (data.followups.length > 0) {
                         list.innerHTML += `
                             <div>
-                                <div class="flex items-center mb-4">
-                                    <span class="text-teal-600 mr-2 text-xl">📝</span>
-                                    <h3 class="text-xl font-bold text-gray-800">Follow-ups</h3>
+                                <div class="flex items-center mb-3 sm:mb-4">
+                                    <span class="text-teal-600 mr-2 text-lg sm:text-xl">📝</span>
+                                    <h3 class="text-lg sm:text-xl font-bold text-gray-800">Follow-ups</h3>
                                     <span class="ml-2 bg-teal-100 text-teal-800 px-2 py-1 rounded-full text-xs font-medium">${data.followups.length}</span>
                                 </div>`;
                         
                         data.followups.forEach(followup => {
                             list.innerHTML += `
-                                <div class="bg-gradient-to-r from-teal-50 to-blue-50 p-4 rounded-xl border-l-4 border-teal-400 mb-3 hover:shadow-md transition-all duration-200">
-                                    <div class="flex items-center justify-between mb-2">
-                                        <h4 class="font-semibold text-gray-800">${followup.evangelism__person_name}</h4>
-                                        ${followup.completed ? '<span class="text-green-600 text-sm">✅ Completed</span>' : '<span class="text-blue-600 text-sm">📅 Scheduled</span>'}
+                                <div class="bg-gradient-to-r from-teal-50 to-blue-50 p-3 sm:p-4 rounded-xl border-l-4 border-teal-400 mb-3 hover:shadow-md transition-all duration-200">
+                                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
+                                        <h4 class="font-semibold text-gray-800 text-sm sm:text-base">${followup.evangelism__person_name}</h4>
+                                        ${followup.completed ? '<span class="text-green-600 text-xs sm:text-sm mt-1 sm:mt-0">✅ Completed</span>' : '<span class="text-blue-600 text-xs sm:text-sm mt-1 sm:mt-0">📅 Scheduled</span>'}
                                     </div>
-                                    <p class="text-gray-600 text-sm">${followup.description || 'No description provided'}</p>
+                                    <p class="text-gray-600 text-xs sm:text-sm">${followup.description || 'No description provided'}</p>
                                 </div>`;
                         });
                         list.innerHTML += '</div>';
@@ -209,11 +244,11 @@
                     console.error("Error fetching activities:", error);
                     document.getElementById('evangelism-list').innerHTML = `
                         <div class="text-center py-8">
-                            <div class="bg-red-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <span class="text-2xl">❌</span>
+                            <div class="bg-red-100 w-12 h-12 sm:w-16 sm:h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <span class="text-xl sm:text-2xl">❌</span>
                             </div>
-                            <h3 class="text-lg font-semibold text-gray-800 mb-2">Error Loading</h3>
-                            <p class="text-gray-600">Failed to load activities for this date.</p>
+                            <h3 class="text-base sm:text-lg font-semibold text-gray-800 mb-2">Error Loading</h3>
+                            <p class="text-sm sm:text-base text-gray-600">Failed to load activities for this date.</p>
                         </div>`;
                 });
 
@@ -229,5 +264,52 @@
 
         // Close offcanvas when clicking overlay
         document.getElementById('overlay').addEventListener('click', closeOffcanvas);
+
+        // Add swipe gestures for mobile navigation
+        let touchStartX = 0;
+        let touchEndX = 0;
+        
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            const swipeDistance = touchEndX - touchStartX;
+            
+            if (Math.abs(swipeDistance) > swipeThreshold) {
+                if (swipeDistance > 0) {
+                    // Swipe right - go to previous month
+                    window.location.href = "{% url 'activity_calendar' prev_year prev_month %}";
+                } else {
+                    // Swipe left - go to next month
+                    window.location.href = "{% url 'activity_calendar' next_year next_month %}";
+                }
+            }
+        }
+        
+        // Add touch event listeners to the calendar container
+        const calendarContainer = document.querySelector('.grid.grid-cols-7.gap-1');
+        if (calendarContainer) {
+            calendarContainer.addEventListener('touchstart', function(e) {
+                touchStartX = e.changedTouches[0].screenX;
+            }, { passive: true });
+            
+            calendarContainer.addEventListener('touchend', function(e) {
+                touchEndX = e.changedTouches[0].screenX;
+                handleSwipe();
+            }, { passive: true });
+        }
+
+        // Prevent context menu on long press for calendar days
+        document.addEventListener('contextmenu', function(e) {
+            if (e.target.closest('.grid.grid-cols-7')) {
+                e.preventDefault();
+            }
+        });
+
+        // Add class to calendar days for CSS targeting
+        document.addEventListener('DOMContentLoaded', function() {
+            const calendarDays = document.querySelectorAll('.grid.grid-cols-7 > div[onclick]');
+            calendarDays.forEach(day => {
+                day.classList.add('calendar-day');
+            });
+        });
     </script>
 {% endblock body %}
