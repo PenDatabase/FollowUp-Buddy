@@ -73,6 +73,27 @@
 
         <!-- Calendar -->
         <div class="bg-white p-3 sm:p-6 md:p-8 rounded-xl shadow-lg max-w-5xl mx-auto">
+            <!-- Legend / Filters (moved to top for visibility) -->
+            <div class="mb-4 md:mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                <div class="flex items-center gap-3 justify-center sm:justify-start">
+                    <div class="flex items-center gap-1 px-3 py-1.5 rounded-full bg-gradient-to-r from-teal-50 to-orange-50 border border-teal-200 shadow-sm">
+                        <span class="inline-block w-3 h-3 rounded-full bg-gradient-to-r from-teal-400 to-orange-400 shadow"></span>
+                        <span class="text-xs font-medium text-teal-700">Has activities</span>
+                    </div>
+                    <div class="flex items-center gap-1 px-3 py-1.5 rounded-full bg-gray-50 border border-gray-200 shadow-sm">
+                        <span class="inline-block w-3 h-3 rounded-full bg-gray-300"></span>
+                        <span class="text-xs font-medium text-gray-600">No activities</span>
+                    </div>
+                </div>
+                <!-- Filter Toggle -->
+                <div class="flex justify-center">
+                    <div class="inline-flex rounded-full bg-gray-100 p-1 border border-gray-200 shadow-inner" role="group" aria-label="Activity filter">
+                        <button id="showAllBtn" type="button" class="filter-btn active px-4 py-1.5 text-xs sm:text-sm font-semibold rounded-full bg-gradient-to-r from-teal-500 to-orange-500 text-white shadow hover:from-teal-600 hover:to-orange-600 focus:outline-none focus:ring-2 focus:ring-teal-400 transition">All</button>
+                        <button id="showActiveBtn" type="button" class="filter-btn px-4 py-1.5 text-xs sm:text-sm font-semibold rounded-full text-gray-600 hover:text-gray-800 hover:bg-white focus:outline-none focus:ring-2 focus:ring-teal-400 transition">Active</button>
+                    </div>
+                </div>
+            </div>
+
             <!-- Days of the Week -->
             <div class="grid grid-cols-7 gap-1 sm:gap-2 mb-4 md:mb-6">
                 <div class="text-center py-2 sm:py-3 bg-gradient-to-r from-teal-50 to-orange-50 rounded-lg">
@@ -99,7 +120,7 @@
             </div>
 
             <!-- Calendar Grid -->
-            <div class="grid grid-cols-7 gap-1 sm:gap-2">
+            <div class="grid grid-cols-7 gap-1 sm:gap-2" id="calendarGrid">
                 <!-- Placeholder for first day alignment -->
                 {% for _ in placeholders %}
                     <div class="h-14 sm:h-16 md:h-20 lg:h-24"></div>
@@ -107,38 +128,24 @@
 
                 <!-- Calendar Days -->
                 {% for day in calendar_days %}
-                    <div class="h-14 sm:h-16 md:h-20 lg:h-24 p-1 sm:p-2 rounded-lg border-2 cursor-pointer transition-all duration-200 
+                    <div class="day-cell h-14 sm:h-16 md:h-20 lg:h-24 p-0.5 sm:p-1 rounded-xl border-2 cursor-pointer transition-all duration-200 relative overflow-hidden text-center select-none 
                         {% if day.has_activity %}
-                            bg-gradient-to-r from-teal-100 to-orange-100 border-teal-300 hover:from-teal-200 hover:to-orange-200 hover:border-teal-400 active:scale-95 sm:hover:scale-105 shadow-md
+                            has-activity bg-gradient-to-br from-teal-100 to-orange-100 border-teal-300 hover:from-teal-200 hover:to-orange-200 hover:border-teal-400 sm:hover:scale-105 shadow-md
                         {% else %}
-                            bg-gray-50 border-gray-200 hover:bg-gray-100 hover:border-gray-300 active:scale-95
+                            no-activity bg-white border-gray-200 hover:bg-gray-100 hover:border-gray-300
                         {% endif %}"
-                        onclick="openOffcanvas(`{{ day.date }}`)">
-                        <div class="flex flex-col h-full justify-between">
-                            <span class="text-xs sm:text-sm md:text-base lg:text-lg font-semibold 
+                        onclick="openOffcanvas(`{{ day.date }}`)" data-date="{{ day.date }}" aria-label="{{ day.date }} {% if day.has_activity %}has activities{% else %}no activities{% endif %}">
+                        <div class="relative flex items-center justify-center h-full w-full">
+                            <span class="day-number font-semibold tracking-tight 
                                 {% if day.has_activity %}text-teal-700{% else %}text-gray-700{% endif %}">
                                 {{ day.day }}
                             </span>
                             {% if day.has_activity %}
-                                <div class="flex items-end justify-center">
-                                    <div class="w-1 h-1 sm:w-1.5 sm:h-1.5 md:w-2 md:h-2 bg-gradient-to-r from-teal-500 to-orange-500 rounded-full animate-pulse"></div>
-                                </div>
+                                <span class="activity-indicator absolute bottom-1 sm:bottom-1.5 w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-gradient-to-r from-teal-500 to-orange-500 shadow animate-pulse"></span>
                             {% endif %}
                         </div>
                     </div>
                 {% endfor %}
-            </div>
-
-            <!-- Legend -->
-            <div class="mt-4 sm:mt-6 flex flex-col sm:flex-row justify-center items-center sm:space-x-6 space-y-2 sm:space-y-0 text-xs sm:text-sm">
-                <div class="flex items-center">
-                    <div class="w-3 h-3 sm:w-4 sm:h-4 bg-gradient-to-r from-teal-100 to-orange-100 border border-teal-300 rounded mr-2"></div>
-                    <span class="text-gray-600">Has activities</span>
-                </div>
-                <div class="flex items-center">
-                    <div class="w-3 h-3 sm:w-4 sm:h-4 bg-gray-50 border border-gray-200 rounded mr-2"></div>
-                    <span class="text-gray-600">No activities</span>
-                </div>
             </div>
         </div>
     </main>
@@ -166,6 +173,22 @@
     </div>
 
     <script>
+        // Responsive improvements & filtering
+        (function(){
+            const style = document.createElement('style');
+            style.innerHTML = `
+                .day-cell { will-change: transform; }
+                .day-number { font-size: clamp(0.75rem, 2.8vw, 1.05rem); line-height: 1; }
+                @media (min-width: 640px) { .day-number { font-size: clamp(0.85rem, 1.9vw, 1.1rem); } }
+                @media (min-width: 768px) { .day-number { font-size: 1rem; } }
+                @media (max-width: 430px) { .day-cell { border-width: 1.5px; } }
+                .filter-active-only .no-activity { opacity: .25; filter: grayscale(.6); }
+                .filter-active-only .no-activity:hover { opacity: .5; }
+                .filter-btn.active { box-shadow: 0 0 0 2px rgba(255,255,255,.6), 0 2px 4px rgba(0,0,0,.15); }
+            `;
+            document.head.appendChild(style);
+        })();
+
         function openOffcanvas(date) {
             console.log("Selected Date:", date);
             document.getElementById('selected-date').innerText = date;
@@ -310,6 +333,25 @@
             calendarDays.forEach(day => {
                 day.classList.add('calendar-day');
             });
+
+            // Filter toggle logic
+            const showAllBtn = document.getElementById('showAllBtn');
+            const showActiveBtn = document.getElementById('showActiveBtn');
+            const calendarGrid = document.getElementById('calendarGrid');
+            if (showAllBtn && showActiveBtn && calendarGrid) {
+                showAllBtn.addEventListener('click', () => {
+                    showAllBtn.classList.add('active','bg-gradient-to-r','from-teal-500','to-orange-500','text-white');
+                    showActiveBtn.classList.remove('active','bg-gradient-to-r','from-teal-500','to-orange-500','text-white');
+                    showActiveBtn.classList.add('text-gray-600');
+                    calendarGrid.classList.remove('filter-active-only');
+                });
+                showActiveBtn.addEventListener('click', () => {
+                    showActiveBtn.classList.add('active','bg-gradient-to-r','from-teal-500','to-orange-500','text-white');
+                    showAllBtn.classList.remove('active','bg-gradient-to-r','from-teal-500','to-orange-500','text-white');
+                    showAllBtn.classList.add('text-gray-600');
+                    calendarGrid.classList.add('filter-active-only');
+                });
+            }
         });
     </script>
 {% endblock body %}

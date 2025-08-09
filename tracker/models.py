@@ -33,6 +33,15 @@ class Evangelism(models.Model):
     
     def __str__(self):
         return self.person_name
+    
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['evangelist', 'person_name'],
+                name='unique_evangelist_person_name',
+                violation_error_message="An Evangelism with this user and person_name already exists."
+            )
+        ]
 
 
 
@@ -41,3 +50,6 @@ class FollowUp(models.Model):
     evangelism = models.ForeignKey(Evangelism, on_delete=models.CASCADE, related_name="followups")
     description = models.TextField(blank=True)
     date = models.DateField()
+
+    def __str__(self):
+        return f"Followup {self.pk} -> {self.evangelism}"

@@ -8,12 +8,13 @@ class FollowUpForm(forms.ModelForm):
         model = FollowUp
         fields = ["evangelism", "description", "date", "completed"]
     
-    def save(self, commit = ...):
-        followup = super().save(commit)
+    def save(self, commit=True):
+        followup = super().save(commit=commit)
         followup.evangelism.completed = self.cleaned_data['completed']
         if commit:
             followup.evangelism.save()
         return followup
+
 
     
 
