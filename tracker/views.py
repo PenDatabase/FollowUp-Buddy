@@ -8,6 +8,7 @@ from calendar import monthrange
 from .utils import recommend_activity
 from .models import Evangelism, FollowUp
 from .forms import EvangelismForm, FollowUpForm
+from django.db.models import Count
 
 
 
@@ -97,7 +98,12 @@ class EvangelismListing(LoginRequiredMixin, ListView):
     context_object_name = "evangelisms"
 
     def get_queryset(self):
-        return Evangelism.objects.filter(evangelist= self.request.user).all()
+        # Annotate with number of followups for display in listing
+        return (
+            Evangelism.objects.filter(evangelist=self.request.user)
+            .annotate(followup_count=Count("followups"))
+            .order_by("-date")
+        )
     
 
 
