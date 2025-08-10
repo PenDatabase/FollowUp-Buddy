@@ -1,66 +1,102 @@
+"""Seed script to create/update a default evangelist user.
+
+Run with:
+	python seed.py
+
+Idempotent: running multiple times won't duplicate the user. If the user
+already exists, the password is reset to the provided value so you can
+recover access easily in development.
+"""
+
 import os
+import sys
 import django
-import random
-import datetime
-from faker import Faker
+from django.core.exceptions import ImproperlyConfigured
 
-# Setup Django environment
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'followup_buddy.settings')
-django.setup()
 
-from django.contrib.auth.models import User
-from tracker.models import Evangelism, FollowUp
+def setup_django() -> None:
+	os.environ.setdefault("DJANGO_SETTINGS_MODULE", "followup_buddy.settings")
+	try:
+		django.setup()
+	except ImproperlyConfigured as e:
+		print(f"[seed] Django ImproperlyConfigured: {e}")
+		sys.exit(1)
 
-fake = Faker()
 
-# Optional: Clear old data
-Evangelism.objects.all().delete()
-FollowUp.objects.all().delete()
+def create_evangelist_user(
+	username: str = "evangelist",
+	email: str = "evangelist@example.com",
+	password: str = "password123",
+	make_staff: bool = True,
+	make_superuser: bool = False,
+):
+	from django.contrib.auth import get_user_model
 
-# Create or get a default superuser evangelist
-evangelist, created = User.objects.get_or_create(
-    username='evangelist',
-    defaults={
-        'email': 'evangelist@example.com',
-        'is_staff': True,
-        'is_superuser': True,
-    }
-)
-if created:
-    evangelist.set_password('password123')
-    evangelist.save()
-    print("✅ Created default superuser: evangelist / password123")
+	User = get_user_model()
 
-FAITH_OPTIONS = ['strong_faith', 'less_faith', 'unbeliever', 'unknown']
-LOCATIONS = ['Hostel A', 'Cafeteria', 'Lecture Hall 2', 'University Chapel', 'Main Library']
-COURSES = [
-    'Computer Science', 'Industrial Mathematics', 'Industrial Physics',
-    'State Management', 'Civil Engineering', 'Mechanical Engineering',
-    'Mass Communication', 'Business Administration', 'Architecture',
-    'Political Science'
-]
+	user, created = User.objects.get_or_create(
+		username=username,
+		defaults={
+			"email": email,
+			"is_staff": make_staff,
+			"is_superuser": make_superuser,
+		},
+	)
 
-# Seed Evangelism records
-for _ in range(10):
-    faith = random.choice(FAITH_OPTIONS)
-    date = fake.date_between(start_date='-14d', end_date='today')
-    evangelism = Evangelism.objects.create(
-        evangelist=evangelist,
-        person_name=fake.name(),
-        course=random.choice(COURSES),
-        location=random.choice(LOCATIONS),
-        date=date,
-        description=fake.paragraph(nb_sentences=2),
-        faith=faith,
-        completed=random.choice([True, False])
-    )
+	if created:
+		user.set_password(password)
+		user.save()
+		action = "created"
+	else:
+		# Always reset password to ensure known credentials in dev seeding.
+		changed = False
+		if make_staff and not user.is_staff:
+			user.is_staff = True
+			changed = True
+		if make_superuser and not user.is_superuser:
+			user.is_superuser = True
+			changed = True
+		user.set_password(password)
+		changed = True
+		if changed:
+			user.save()
+		action = "updated"
 
-    # Add 1–3 follow-ups per evangelism
-    for i in range(random.randint(1, 3)):
-        FollowUp.objects.create(
-            evangelism=evangelism,
-            description=fake.sentence(),
-            date=date + datetime.timedelta(days=i + 1)
-        )
+	print(
+		f"[seed] Evangelist user {action}: username='{user.username}', password='{password}', "
+		f"staff={user.is_staff}, superuser={user.is_superuser}"
+	)
+	return user
 
-print("✅ Database successfully seeded with evangelism and follow-up data.")
+
+def main():
+	print("[seed] Starting seeding process...")
+	setup_django()
+
+	# Allow overriding via environment variables if needed.
+	username = os.getenv("EVANGELIST_USERNAME", "evangelist")
+	email = os.getenv("EVANGELIST_EMAIL", "evangelist@example.com")
+	password = os.getenv("EVANGELIST_PASSWORD", "password123")
+	make_staff = os.getenv("EVANGELIST_IS_STAFF", "true").lower() in {"1", "true", "yes"}
+	make_superuser = (
+		os.getenv("EVANGELIST_IS_SUPERUSER", "false").lower() in {"1", "true", "yes"}
+	)
+
+	try:
+		create_evangelist_user(
+			username=username,
+			email=email,
+			password=password,
+			make_staff=make_staff,
+			make_superuser=make_superuser,
+		)
+	except Exception as e:  # pragma: no cover - simple seed helper
+		print(f"[seed] Error while creating evangelist user: {e}")
+		sys.exit(1)
+
+	print("[seed] Done.")
+
+
+if __name__ == "__main__":
+	main()
+
