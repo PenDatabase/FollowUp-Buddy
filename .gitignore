@@ -4,8 +4,7 @@ __pycache__/
 *.pyo
 *.pyd
 
-# Django migrations
-*/migrations/*
+
 
 
 # Media and static files
