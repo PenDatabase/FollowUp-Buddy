@@ -1,0 +1,46 @@
+{
+  "name": "FollowUp Buddy",
+  "description": "A Django-based web app designed to help users (especially Christians) track their evangelism efforts and schedule meaningful follow-ups.",
+  "repository": "https://github.com/PenDatabase/FollowUp-Buddy",
+  "logo": "",
+  "keywords": ["python", "django", "evangelism", "tracking", "follow-up"],
+  "success_url": "/",
+  "env": {
+    "SECRET_KEY": {
+      "description": "A secret key for Django's cryptographic signing. Generate a secure random string.",
+      "generator": "secret"
+    },
+    "DEBUG": {
+      "description": "Set to False in production",
+      "value": "False"
+    },
+    "ALLOWED_HOSTS": {
+      "description": "Comma-separated list of allowed hosts. Your Heroku app URL will be automatically added.",
+      "value": "*"
+    }
+  },
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "basic"
+    }
+  },
+  "addons": [
+    {
+      "plan": "heroku-postgresql:essential-0",
+      "as": "DATABASE"
+    }
+  ],
+  "buildpacks": [
+    {
+      "url": "heroku/python"
+    }
+  ],
+  "environments": {
+    "test": {
+      "scripts": {
+        "test": "python manage.py test"
+      }
+    }
+  }
+}

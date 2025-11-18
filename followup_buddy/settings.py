@@ -82,13 +82,17 @@ WSGI_APPLICATION = 'followup_buddy.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-# Database configuration for Railway deployment
+# Database configuration for Heroku deployment
 DATABASE_URL = os.getenv('DATABASE_URL')
 
 if DATABASE_URL:
-    # Production database (Railway PostgreSQL)
+    # Production database (Heroku PostgreSQL)
     DATABASES = {
-        'default': dj_database_url.parse(DATABASE_URL)
+        'default': dj_database_url.config(
+            default=DATABASE_URL,
+            conn_max_age=600,
+            conn_health_checks=True,
+        )
     }
     print(f"Connected to database: {DATABASES['default']['ENGINE']}")
 else:
@@ -169,7 +173,7 @@ if not DEBUG:
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     CSRF_TRUSTED_ORIGINS = [
-        'https://*.railway.app',
+        'https://*.herokuapp.com',
     ]
 
 
@@ -203,7 +207,7 @@ LOGGING = {
     },
 }
 
-# For Railway deployment - enable more verbose logging
-if os.getenv('RAILWAY_ENVIRONMENT'):
+# For Heroku deployment - enable more verbose logging
+if os.getenv('DYNO'):
     LOGGING['root']['level'] = 'DEBUG'
     LOGGING['loggers']['django']['level'] = 'DEBUG'

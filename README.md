@@ -123,8 +123,65 @@ MIT License
 
 ## ✝️ Inspiration
 
-> “Go therefore and make disciples of all nations…”  
+> "Go therefore and make disciples of all nations…"  
 > — Matthew 28:19
 
 FollowUp Buddy is built to help you not only obey the Great Commission, but steward every soul with love, intention, and diligence.
 
+---
+
+## 🚀 Deploying to Heroku
+
+### Prerequisites
+- A Heroku account ([Sign up here](https://signup.heroku.com/))
+- [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli) installed
+- Git installed
+
+### Deployment Steps
+
+1. **Login to Heroku**
+   ```bash
+   heroku login
+   ```
+
+2. **Create a new Heroku app**
+   ```bash
+   heroku create your-app-name
+   ```
+
+3. **Add PostgreSQL addon**
+   ```bash
+   heroku addons:create heroku-postgresql:essential-0
+   ```
+
+4. **Set environment variables**
+   ```bash
+   heroku config:set SECRET_KEY="your-secret-key-here"
+   heroku config:set DEBUG=False
+   ```
+
+5. **Deploy to Heroku**
+   ```bash
+   git push heroku main
+   ```
+
+6. **Run migrations**
+   ```bash
+   heroku run python manage.py migrate
+   ```
+
+7. **Create a superuser** (optional)
+   ```bash
+   heroku run python manage.py createsuperuser
+   ```
+
+8. **Open your app**
+   ```bash
+   heroku open
+   ```
+
+### Alternative: Deploy with One Click
+
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/PenDatabase/FollowUp-Buddy)
+
+---
